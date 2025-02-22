@@ -1,0 +1,21 @@
+### GET request to example server
+GET http://localhost:8080/saludo
+    ?generated-in=IntelliJ IDEA
+
+###
+### Crear un usuario
+POST http://localhost:8080/api/usuarios
+Content-Type: application/json
+
+
+{
+  "nombre": "Carlos",
+  "ciudad": "Armenia",
+  "direccion": "Calle 123",
+  "email": "carlos@email.com",
+  "password": "123456789"
+}
+
+
+### Obtener un usuario por su id
+GET http://localhost:8080/api/usuarios

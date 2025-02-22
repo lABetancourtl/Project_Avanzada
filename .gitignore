@@ -1,0 +1,71 @@
+### 🔹 Archivos y carpetas de Gradle ###
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+gradle-app.setting
+
+### 🔹 IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+/.idea/**/workspace.xml
+/.idea/**/tasks.xml
+/.idea/**/usage.statistics.xml
+/.idea/**/shelf/
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### 🔹 Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### 🔹 NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### 🔹 VS Code ###
+.vscode/
+
+### 🔹 Archivos de compilación de Java ###
+*.class
+*.jar
+*.war
+*.ear
+
+### 🔹 Archivos de logs y temporales ###
+logs/
+*.log
+*.tmp
+
+### 🔹 Archivos de configuración y entornos locales ###
+.env
+.env.local
+
+### 🔹 Caché de dependencias (Maven y Gradle) ###
+/.m2/
+/.gradle/
+/*/bin/
+/*/build/
+
+### 🔹 Archivos generados por Docker ###
+.dockerignore
+docker-compose.override.yml
+
+### 🔹 Archivos generados por el sistema operativo ###
+.DS_Store  # macOS
+Thumbs.db  # Windows
