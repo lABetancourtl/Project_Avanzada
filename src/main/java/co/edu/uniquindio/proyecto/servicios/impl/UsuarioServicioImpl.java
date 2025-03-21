@@ -30,10 +30,6 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         usuarios.add(new UsuarioDTO(1010L, "Gabriela Herrera", "3145678901", "Neiva", "Calle 30", "gabriela@example.com"));
     }
 
-
-
-
-    
     @Override
     public void crear(CrearUsuarioDTO cuenta) {
 

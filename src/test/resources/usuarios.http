@@ -1,15 +1,3 @@
 ### Crear un usuario
 POST http://localhost:8080/api/usuarios
-Content-Type: application/json
 
-{
-  "nombre": "Carlos",
-  "ciudad": "Armenia",
-  "direccion": "Calle 123",
-  "email": "carlos@email.com",
-  "password": "123456789"
-}
-
-
-### Obtener todos los usuarios que tengan un nombre dado
-GET http://localhost:8080/api/usuarios?nombre=Carlos

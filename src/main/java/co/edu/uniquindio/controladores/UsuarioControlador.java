@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/usuarios")
@@ -56,8 +55,5 @@ public class UsuarioControlador {
         List<UsuarioDTO> lista = usuarioServicio.listarTodos();
         return ResponseEntity.ok(new MensajeDTO<>(false, lista));
     }
-
-
-
-
+    
 }

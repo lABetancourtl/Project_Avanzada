@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
         bearerFormat = "JWT",
         type = SecuritySchemeType.HTTP,
         in = SecuritySchemeIn.HEADER
+
 )
 
 public class SwaggerConfig {
