@@ -14,6 +14,7 @@ public class DetalleProducto {
     private ObjectId idProducto;
     private float precio;
     private int cantidad;
+    private int Numero;
 
 
 }
