@@ -1,32 +1,30 @@
 package co.edu.uniquindio.proyecto.modelo;
 
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.bson.types.ObjectId;
 
-
-@Document("transacciones")
+@Document("comentarios")
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Transaccion {
-
+public class Comentario {
 
     @Id
     @EqualsAndHashCode.Include
-    private ObjectId codigo;
+    private ObjectId id;
 
-
-    private List<DetalleProducto> productos;
-    private ObjectId idCliente;
+    private ObjectId idReporte;
+    private ObjectId idUsuario;
+    private String contenido;
     private LocalDateTime fecha;
-    private Pago pago;
 
-
+    private boolean activo;
 }
-
