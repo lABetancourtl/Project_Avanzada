@@ -2,7 +2,6 @@ package co.edu.uniquindio.controladores;
 
 import co.edu.uniquindio.proyecto.dto.CrearUsuarioDTO;
 import co.edu.uniquindio.proyecto.dto.EditarUsuarioDTO;
-import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import co.edu.uniquindio.proyecto.dto.UsuarioDTO;
 import co.edu.uniquindio.proyecto.servicios.UsuarioServicio;
 import jakarta.validation.Valid;
