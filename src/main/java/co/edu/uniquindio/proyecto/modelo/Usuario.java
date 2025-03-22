@@ -6,8 +6,9 @@ import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDateTime;
-import java.util.List;
+
 @Document("usuarios")
 @Getter
 @Setter
@@ -28,10 +29,9 @@ public class Usuario {
     private String telefono;
     private String email;
     private String password;
-    private Rol rol; // CLIENTE o MODERADOR
+    private Rol rol; // CLIENTE o ADMINISTRADOR
     private EstadoUsuario estado; // ACTIVO, INACTIVO, ELIMINADO
     private LocalDateTime fechaRegistro;
-    private String codigoValidacion;
-    private LocalDateTime expiracionCodigo;
-    private boolean activo; // para borrado lógico
+    private CodigoValidacion codigoValidacion; // ← embebida
+    private boolean activo;
 }
