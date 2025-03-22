@@ -13,5 +13,6 @@ public record CambiarClaveDTO(
 
         @NotBlank @Length(min = 7, max = 20)
         String nuevaPassword
+
 ) {
 }
