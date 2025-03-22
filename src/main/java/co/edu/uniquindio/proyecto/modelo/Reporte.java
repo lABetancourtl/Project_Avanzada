@@ -24,6 +24,7 @@ public class Reporte {
     private String titulo;
     private String descripcion;
     private ObjectId idUsuario; // cliente que lo creó
+    private Ubicacion ubicacion;
     private CategoriaReporte categoria;
     private LocalDateTime fechaCreacion;
     private double latitud;
