@@ -1,5 +1,7 @@
 package co.edu.uniquindio.proyecto.excepciones;
 
+import co.edu.uniquindio.proyecto.dto.MensajeDTO;
+import co.edu.uniquindio.proyecto.dto.ValidacionDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
