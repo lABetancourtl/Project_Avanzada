@@ -1,4 +1,4 @@
-package co.edu.uniquindio.controladores;
+package co.edu.uniquindio.proyecto.controladores;
 
 import co.edu.uniquindio.proyecto.dto.CrearUsuarioDTO;
 import co.edu.uniquindio.proyecto.dto.EditarUsuarioDTO;
