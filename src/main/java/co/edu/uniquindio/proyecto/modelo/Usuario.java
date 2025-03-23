@@ -1,11 +1,12 @@
 package co.edu.uniquindio.proyecto.modelo;
 
-import co.edu.uniquindio.proyecto.enums.EstadoUsuario;
-import co.edu.uniquindio.proyecto.enums.Rol;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import co.edu.uniquindio.proyecto.modelo.enums.EstadoUsuario;
+import co.edu.uniquindio.proyecto.modelo.enums.Rol;
 
 import java.time.LocalDateTime;
 

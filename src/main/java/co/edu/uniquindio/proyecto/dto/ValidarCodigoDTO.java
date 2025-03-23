@@ -2,13 +2,18 @@ package co.edu.uniquindio.proyecto.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import org.hibernate.validator.constraints.Length;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record ValidarCodigoDTO(
-        @NotBlank @Email @Length(max = 100)
-        String email,
-
-        @NotBlank @Length(min = 4, max = 10)
-        String codigo
-) {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ValidarCodigoDTO {
+    @NotBlank(message = "El email es obligatorio")
+    @Email(message = "El formato del email no es válido")
+    private String email;
+    
+    @NotBlank(message = "El código es obligatorio")
+    private String codigo;
 }

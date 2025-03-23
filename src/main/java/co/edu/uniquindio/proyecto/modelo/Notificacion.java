@@ -1,10 +1,11 @@
 package co.edu.uniquindio.proyecto.modelo;
 
-import co.edu.uniquindio.proyecto.enums.TipoNotificacion;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import co.edu.uniquindio.proyecto.modelo.enums.TipoNotificacion;
 
 import java.time.LocalDateTime;
 

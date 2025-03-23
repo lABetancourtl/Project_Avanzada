@@ -1,7 +1,6 @@
 package co.edu.uniquindio.proyecto.modelo;
 
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Getter
@@ -10,9 +9,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @ToString
-@EqualsAndHashCode
 public class CodigoValidacion {
-
+    
     private String codigo;
-    private LocalDateTime fecha;
+    private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaVencimiento;
 }

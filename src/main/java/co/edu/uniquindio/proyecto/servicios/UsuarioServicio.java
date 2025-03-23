@@ -3,19 +3,18 @@ package co.edu.uniquindio.proyecto.servicios;
 import co.edu.uniquindio.proyecto.dto.CrearUsuarioDTO;
 import co.edu.uniquindio.proyecto.dto.EditarUsuarioDTO;
 import co.edu.uniquindio.proyecto.dto.UsuarioDTO;
-import jakarta.validation.Valid;
 
 import java.util.List;
 
 public interface UsuarioServicio {
-
-    void crear(CrearUsuarioDTO cuenta);
-
-    void editar(@Valid EditarUsuarioDTO cuenta);
-
-    void eliminar(String id);
-
-    UsuarioDTO obtener(String id);
-
-    List<UsuarioDTO> listarTodos();
+    
+    String crear(CrearUsuarioDTO usuario) throws Exception;
+    
+    void editar(EditarUsuarioDTO usuario) throws Exception;
+    
+    void eliminar(String id) throws Exception;
+    
+    UsuarioDTO obtener(String id) throws Exception;
+    
+    List<UsuarioDTO> listarTodos(String nombre, String ciudad, int pagina);
 }
