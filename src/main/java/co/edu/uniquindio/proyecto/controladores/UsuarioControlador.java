@@ -2,6 +2,7 @@ package co.edu.uniquindio.proyecto.controladores;
 
 import co.edu.uniquindio.proyecto.dto.CrearUsuarioDTO;
 import co.edu.uniquindio.proyecto.dto.EditarUsuarioDTO;
+import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import co.edu.uniquindio.proyecto.dto.UsuarioDTO;
 import co.edu.uniquindio.proyecto.servicios.UsuarioServicio;
 import jakarta.validation.Valid;
@@ -20,10 +21,11 @@ public class UsuarioControlador {
 
     // Registro de usuario
     @PostMapping
-    public ResponseEntity<String> crear(@Valid @RequestBody CrearUsuarioDTO cuenta) throws Exception {
+    public ResponseEntity<MensajeDTO<String>> crear(@Valid @RequestBody CrearUsuarioDTO cuenta) throws Exception {
         usuarioServicio.crear(cuenta);
-        return ResponseEntity.ok("Registro exitoso. Verifica tu correo para activar tu cuenta.");
+        return ResponseEntity.ok(new MensajeDTO<>(false, "Registro exitoso. Verifica tu correo para activar tu cuenta."));
     }
+
 
     // Edición de perfil
     @PutMapping

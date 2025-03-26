@@ -15,6 +15,8 @@ public interface UsuarioServicio {
     void eliminar(String id) throws Exception;
     
     UsuarioDTO obtener(String id) throws Exception;
-    
+
+    List<UsuarioDTO> listarTodos();
+
     List<UsuarioDTO> listarTodos(String nombre, String ciudad, int pagina);
 }
