@@ -24,14 +24,9 @@ public class Notificacion {
     private ObjectId id;
 
     private String mensaje;
-
     private LocalDateTime fecha;
-
     private TipoNotificacion tipoNotificacion;
-
     private boolean leida;
-
-    private ObjectId reporteId;   // ID del reporte relacionado
-
-    private ObjectId idUsuario;   // Usuario que recibe la notificación
+    private ObjectId reporteId;
+    private ObjectId usuarioId;
 }
