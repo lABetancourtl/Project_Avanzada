@@ -6,12 +6,15 @@ import co.edu.uniquindio.proyecto.dto.EditarUsuarioDTO;
 import co.edu.uniquindio.proyecto.dto.UsuarioDTO;
 import co.edu.uniquindio.proyecto.servicios.UsuarioServicio;
 import org.springframework.stereotype.Service;
+import lombok.*;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
 
+@Getter
+@Setter
 @Service
 public class UsuarioServicioImpl implements UsuarioServicio {
 
@@ -21,12 +24,15 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         
     }
 
-    @Override
-    public void crear(CrearUsuarioDTO cuenta) {
+ @Override
+ public String crear(CrearUsuarioDTO cuenta) {
+  // Ejemplo de lógica temporal
+  System.out.println("Usuario creado: " + cuenta.getEmail());
+  return "Registro exitoso. Verifica tu correo para activar tu cuenta.";
+ }
 
-    }
 
-    @Override
+ @Override
     public void editar(EditarUsuarioDTO cuenta) {
 
     }
