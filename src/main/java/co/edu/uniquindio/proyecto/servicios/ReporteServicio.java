@@ -3,9 +3,10 @@ package co.edu.uniquindio.proyecto.servicios;
 import co.edu.uniquindio.proyecto.dto.CrearReporteDTO;
 import co.edu.uniquindio.proyecto.dto.EditarReporteDTO;
 import co.edu.uniquindio.proyecto.dto.ReporteDTO;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public interface ReporteServicio {
     
     String crear(CrearReporteDTO reporte) throws Exception;

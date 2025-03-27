@@ -8,8 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoReporte;
 
 import java.time.LocalDateTime;
-import java.util.List;
-@Document("historial_estados")
+
+@Document("historial_Reporte")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,14 +17,14 @@ import java.util.List;
 @Builder
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class HistorialEstadoReporte {
+public class HistorialReporte {
 
     @Id
     @EqualsAndHashCode.Include
     private ObjectId id;
 
-    private ObjectId idReporte;
-    private EstadoReporte nuevoEstado;
-    private LocalDateTime fechaCambio;
     private String observacion;
+    private ObjectId clienteId;
+    private EstadoReporte estado;
+    private LocalDateTime fecha;
 }

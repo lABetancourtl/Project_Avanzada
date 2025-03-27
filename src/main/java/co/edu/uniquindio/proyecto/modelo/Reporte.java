@@ -23,15 +23,14 @@ public class Reporte {
     @EqualsAndHashCode.Include
     private ObjectId id;
     
-    private String titulo;
+    private List<HistorialReporte> historial;
+    private LocalDateTime fecha;
     private String descripcion;
-    private LocalDateTime fechaCreacion;
-    private LocalDateTime fechaActualizacion;
-    private EstadoReporte estado;
+    private int contadorImportante;
     private ObjectId usuarioId; // Referencia al usuario que creó el reporte
-    private String ciudad;
-    private String categoria;
-    private Ubicacion ubicacion; // Documento embebido
-    private List<Comentario> comentarios; // Lista de documentos embebidos
-    private List<String> imagenes; // URLs de las imágenes
+    private String titulo;
+    private Ubicacion ubicacion;
+    private ObjectId categoriaid;
+    private List<String> fotos;
+    private EstadoReporte estadoActual;
 }

@@ -21,10 +21,8 @@ public class Comentario {
     @EqualsAndHashCode.Include
     private ObjectId id;
 
-    private ObjectId idReporte;
-    private ObjectId idUsuario;
-    private String contenido;
+    private ObjectId reporteId;
+    private String mensaje;
     private LocalDateTime fecha;
-
-    private boolean activo;
+    private ObjectId usuarioId;
 }

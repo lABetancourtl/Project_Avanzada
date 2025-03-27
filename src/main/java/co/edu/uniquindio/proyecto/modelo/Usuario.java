@@ -24,15 +24,16 @@ public class Usuario {
     @EqualsAndHashCode.Include
     private ObjectId id;
 
+    private String email;
+    private Rol rol; // CLIENTE o ADMINISTRADOR
+    private String telefono;
+    private String password;
     private String nombre;
     private String ciudad;
-    private String direccion;
-    private String telefono;
-    private String email;
-    private String password;
-    private Rol rol; // CLIENTE o ADMINISTRADOR
     private EstadoUsuario estado; // ACTIVO, INACTIVO, ELIMINADO
-    private LocalDateTime fechaRegistro;
     private CodigoValidacion codigoValidacion; // ← embebida
+    private String direccion;
     private boolean activo;
+
+
 }

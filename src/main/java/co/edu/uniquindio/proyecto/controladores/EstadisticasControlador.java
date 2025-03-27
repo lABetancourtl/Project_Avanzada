@@ -1,4 +1,4 @@
-package co.edu.uniquindio.proyecto.controladores;
+pa@Serviceckage co.edu.uniquindio.proyecto.controladores;
 
 import co.edu.uniquindio.proyecto.dto.EstadisticaDTO;
 import co.edu.uniquindio.proyecto.servicios.EstadisticasServicio;
