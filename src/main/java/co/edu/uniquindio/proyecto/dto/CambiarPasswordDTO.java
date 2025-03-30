@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 
-public record CambiarClaveDTO(
+public record CambiarPasswordDTO(
         @NotBlank @Email @Length(max = 100)
         String email,
 

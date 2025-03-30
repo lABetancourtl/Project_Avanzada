@@ -1,4 +1,4 @@
-package co.edu.uniquindio.proyecto.modelo;
+package co.edu.uniquindio.proyecto.modelo.documents;
 
 import lombok.*;
 import org.bson.types.ObjectId;

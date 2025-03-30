@@ -1,6 +1,6 @@
 package co.edu.uniquindio.proyecto.repositorios;
 
-import co.edu.uniquindio.proyecto.modelo.Usuario;
+import co.edu.uniquindio.proyecto.modelo.documents.Usuario;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoUsuario;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;

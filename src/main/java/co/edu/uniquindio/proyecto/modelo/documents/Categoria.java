@@ -1,15 +1,11 @@
-package co.edu.uniquindio.proyecto.modelo;
+package co.edu.uniquindio.proyecto.modelo.documents;
 
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoReporte;
-
-import java.time.LocalDateTime;
-
-@Document("historial_Reporte")
+@Document("categorias")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,14 +13,12 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class HistorialReporte {
+public class Categoria {
 
     @Id
     @EqualsAndHashCode.Include
     private ObjectId id;
 
-    private String observacion;
-    private ObjectId clienteId;
-    private EstadoReporte estado;
-    private LocalDateTime fecha;
+    private String nombre;
+    private String descripcion;
 }

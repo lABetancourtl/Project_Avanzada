@@ -28,20 +28,21 @@ repositories {
 
 
 dependencies {
-    implementation ("org.springframework.boot:spring-boot-starter-mail")
-    implementation ("org.springframework.boot:spring-boot-starter-web")
-    implementation ("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0")
-    implementation ("org.springframework.boot:spring-boot-starter")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.mapstruct:mapstruct:1.5.5.Final") // ✅ NUEVO
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final") // ✅ NUEVO
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
+
 
 
 tasks.withType<Test> {

@@ -1,6 +1,7 @@
-package co.edu.uniquindio.proyecto.modelo;
+package co.edu.uniquindio.proyecto.modelo.documents;
 
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoReporte;
+import co.edu.uniquindio.proyecto.modelo.vo.HistorialReporte;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
