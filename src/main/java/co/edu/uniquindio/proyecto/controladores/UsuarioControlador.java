@@ -25,7 +25,7 @@ public class UsuarioControlador {
     }
 
     // Edición de perfil
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<MensajeDTO<String>> editar(@Valid @RequestBody EditarUsuarioDTO cuenta) throws Exception {
         usuarioServicio.editar(cuenta);
         return ResponseEntity.ok(new MensajeDTO<>(false, "Perfil actualizado correctamente."));
@@ -65,29 +65,29 @@ public class UsuarioControlador {
 
     @GetMapping("/{email}/reportes")
     public ResponseEntity<MensajeDTO<List<InfoReporteDTO>>> obtenerReportesUsuario(@PathVariable String id) throws Exception {
-        usuarioServicio.obtenerReportesUsuario(id);
-        return ResponseEntity.ok(new MensajeDTO<>(false, new ArrayList<>()));
+        List<InfoReporteDTO> lista = usuarioServicio.obtenerReportesUsuario(id);
+        return ResponseEntity.ok(new MensajeDTO<>(false, lista));
     }
 
     //-----------------Preguntar al profesor----------------------------------------
 
     // Listar usuarios con filtros y paginación
-    @GetMapping
-    public ResponseEntity<MensajeDTO<List<UsuarioDTO>>> listarTodos(
-            @RequestParam(required = false) String nombre,
-            @RequestParam(required = false) String ciudad,
-            @RequestParam(defaultValue = "0") int pagina
-    ) {
-        List<UsuarioDTO> lista = usuarioServicio.listarTodos(nombre, ciudad, pagina);
-        return ResponseEntity.ok(new MensajeDTO<>(false, lista));
-    }
-
-    // Login de usuario
-    @PostMapping("/login")
-    public ResponseEntity<MensajeDTO<TokenDTO>> login(@Valid @RequestBody LoginDTO loginDTO) throws Exception {
-        TokenDTO token = usuarioServicio.login(loginDTO);
-        return ResponseEntity.ok(new MensajeDTO<>(false, token));
-    }
+//    @GetMapping
+//    public ResponseEntity<MensajeDTO<List<UsuarioDTO>>> listarTodos(
+//            @RequestParam(required = false) String nombre,
+//            @RequestParam(required = false) String ciudad,
+//            @RequestParam(defaultValue = "0") int pagina
+//    ) {
+//        List<UsuarioDTO> lista = usuarioServicio.listarTodos(nombre, ciudad, pagina);
+//        return ResponseEntity.ok(new MensajeDTO<>(false, lista));
+//    }
+//
+//    // Login de usuario
+//    @PostMapping("/login")
+//    public ResponseEntity<MensajeDTO<TokenDTO>> login(@Valid @RequestBody LoginDTO loginDTO) throws Exception {
+//        TokenDTO token = usuarioServicio.login(loginDTO);
+//        return ResponseEntity.ok(new MensajeDTO<>(false, token));
+//    }
 
     // Validar si un email ya está registrado
 //    @GetMapping("/validar-email")

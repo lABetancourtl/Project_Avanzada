@@ -2,6 +2,7 @@ package co.edu.uniquindio.proyecto.modelo.documents;
 
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoReporte;
 import co.edu.uniquindio.proyecto.modelo.vo.HistorialReporte;
+import co.edu.uniquindio.proyecto.modelo.vo.Ubicacion;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -24,14 +25,15 @@ public class Reporte {
     @EqualsAndHashCode.Include
     private ObjectId id;
     
-    private List<HistorialReporte> historial;
-    private LocalDateTime fecha;
-    private String descripcion;
-    private int contadorImportante;
-    private ObjectId usuarioId; // Referencia al usuario que creó el reporte
     private String titulo;
-    private Ubicacion ubicacion;
     private ObjectId categoriaid;
+    private String descripcion;
+    private Ubicacion ubicacion;
     private List<String> fotos;
+    private ObjectId usuarioId; // Referencia al usuario que creó el reporte
+    private LocalDateTime fecha;
+    private List<HistorialReporte> historial;
     private EstadoReporte estadoActual;
+    private int contadorImportante;
+
 }
