@@ -1,12 +1,12 @@
 package co.edu.uniquindio.proyecto.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class UsuarioDTO {
     private String id;
     private String nombre;

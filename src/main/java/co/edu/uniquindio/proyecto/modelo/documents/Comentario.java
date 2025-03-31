@@ -1,11 +1,12 @@
-package co.edu.uniquindio.proyecto.modelo;
+package co.edu.uniquindio.proyecto.modelo.documents;
 
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import java.time.LocalDateTime;
 
-@Document("categorias")
+@Document("comentarios")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,12 +14,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Categoria {
+public class Comentario {
 
     @Id
     @EqualsAndHashCode.Include
     private ObjectId id;
 
-    private String nombre;
-    private String descripcion;
+    private ObjectId reporteId;
+    private String mensaje;
+    private LocalDateTime fecha;
+    private ObjectId usuarioId;
 }
