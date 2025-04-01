@@ -1,6 +1,8 @@
 package co.edu.uniquindio.proyecto.servicios.impl;
 
 import co.edu.uniquindio.proyecto.dto.*;
+import co.edu.uniquindio.proyecto.modelo.documents.Usuario;
+import co.edu.uniquindio.proyecto.modelo.enums.Rol;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.servicios.UsuarioServicio;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +17,23 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     private final UsuarioRepositorio usuarioRepo;
 
     @Override
-    public void crear(CrearUsuarioDTO crearUsuarioDTO) throws Exception {
-
+    public void crear(CrearUsuarioDTO dto) throws Exception {
+        // Validación: evitar emails repetidos (opcional)
+        if (usuarioRepo.findByEmail(dto.getEmail()).isPresent()) {
+            throw new Exception("El correo ya está registrado");
+        }
+        Usuario usuario = Usuario.builder()
+                .nombre(dto.getNombre())
+                .email(dto.getEmail())
+                .password(dto.getPassword()) // puedes encriptarla si quieres
+                .telefono(dto.getTelefono())
+                .ciudad(dto.getCiudad())
+                .direccion(dto.getDireccion())
+                .rol(Rol.CLIENTE) // o el rol que manejes por defecto
+                .build();
+        usuarioRepo.save(usuario);
     }
+
 
     @Override
     public void editar(EditarUsuarioDTO editarUsuarioDTO) throws Exception {
@@ -65,7 +81,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 //        return null;
 //    }
 //    private final UsuarioMapper usuarioMapper;
-//
+////
 //    @Override
 //    public void crear(CrearUsuarioDTO crearUsuarioDTO) throws Exception {
 //        // Validar si el email ya está en uso

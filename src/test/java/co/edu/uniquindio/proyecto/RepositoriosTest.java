@@ -22,11 +22,11 @@ public class RepositoriosTest {
     @Test
     public void crearUsuarioTest() {
         Usuario usuario = Usuario.builder()
-                .email("correo@correo.com")
+                .email("jennylomasflowsisassi@correo.com")
                 .rol(Rol.CLIENTE)
                 .telefono("3215")
                 .password("123456")
-                .nombre("Anderson")
+                .nombre("jenny")
                 .ciudad("Armenia")
                 .build();
          usuarioRepositorio.save(usuario);
