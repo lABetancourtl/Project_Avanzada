@@ -1,15 +1,15 @@
-package co.edu.uniquindio.proyecto.modelo;
+package co.edu.uniquindio.proyecto.modelo.documents;
 
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoReporte;
+import co.edu.uniquindio.proyecto.modelo.enums.TipoNotificacion;
 
 import java.time.LocalDateTime;
-import java.util.List;
-@Document("historial_estados")
+
+@Document("notificaciones")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,14 +17,16 @@ import java.util.List;
 @Builder
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class HistorialEstadoReporte {
+public class Notificacion {
 
     @Id
     @EqualsAndHashCode.Include
     private ObjectId id;
 
-    private ObjectId idReporte;
-    private EstadoReporte nuevoEstado;
-    private LocalDateTime fechaCambio;
-    private String observacion;
+    private String mensaje;
+    private LocalDateTime fecha;
+    private TipoNotificacion tipoNotificacion;
+    private boolean leida;
+    private ObjectId reporteId;
+    private ObjectId usuarioId;
 }

@@ -1,4 +1,4 @@
-package co.edu.uniquindio.proyecto.modelo;
+package co.edu.uniquindio.proyecto.modelo.vo;
 
 import lombok.*;
 import java.time.LocalDateTime;
