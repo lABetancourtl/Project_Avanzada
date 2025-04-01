@@ -10,7 +10,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 public class SeguridadSwaggerConfig {
-
+//Pregunta al profesor si este paquete va
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
