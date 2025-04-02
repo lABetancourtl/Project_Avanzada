@@ -7,7 +7,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 public interface CategoriaServicio {
-    String crear(@Valid CrearCategoriaDTO categoria);
+    void crear(@Valid CrearCategoriaDTO categoria) throws Exception;
 
     void editar(String id, @Valid CrearCategoriaDTO categoria);
 

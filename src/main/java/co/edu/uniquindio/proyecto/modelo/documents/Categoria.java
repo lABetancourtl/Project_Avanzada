@@ -20,5 +20,5 @@ public class Categoria {
     private ObjectId id;
 
     private String nombre;
-    private String descripcion;
+    private String icono;
 }

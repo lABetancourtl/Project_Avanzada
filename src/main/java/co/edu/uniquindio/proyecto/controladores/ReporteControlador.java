@@ -2,6 +2,7 @@ package co.edu.uniquindio.proyecto.controladores;
 
 import co.edu.uniquindio.proyecto.dto.CrearReporteDTO;
 import co.edu.uniquindio.proyecto.dto.EditarReporteDTO;
+import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import co.edu.uniquindio.proyecto.dto.ReporteDTO;
 import co.edu.uniquindio.proyecto.servicios.ReporteServicio;
 import jakarta.validation.Valid;
@@ -20,9 +21,9 @@ public class ReporteControlador {
 
     // Crear un nuevo reporte
     @PostMapping
-    public ResponseEntity<String> crear(@Valid @RequestBody CrearReporteDTO reporte) throws Exception {
+    public ResponseEntity<MensajeDTO<String>> crear(@Valid @RequestBody CrearReporteDTO reporte) throws Exception {
         reporteServicio.crear(reporte);
-        return ResponseEntity.ok("Reporte creado exitosamente");
+        return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte creado exitosamente"));
     }
 
     // Editar un reporte existente

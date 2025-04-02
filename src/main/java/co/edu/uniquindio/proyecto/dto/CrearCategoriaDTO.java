@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CrearCategoriaDTO {
+
     @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
-    
-    private String icono;
+
+    private String icono; // puede ser opcional, por eso no usamos @NotBlank
 }
