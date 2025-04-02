@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsCogitnstructor
 public class UsuarioServicioImpl implements UsuarioServicio {
 
     private final UsuarioRepositorio usuarioRepo;
