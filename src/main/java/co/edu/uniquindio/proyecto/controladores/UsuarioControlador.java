@@ -44,6 +44,17 @@ public class UsuarioControlador {
         usuarioServicio.obtener(id);
         return ResponseEntity.ok(new MensajeDTO<>(false, null));
     }
+    //Pregunta para el docente si va o no va
+    @GetMapping
+    public ResponseEntity<MensajeDTO<List<UsuarioDTO>>> listarTodos(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String ciudad,
+            @RequestParam(defaultValue = "0") int pagina
+    ) throws Exception {
+        List<UsuarioDTO> usuarios = usuarioServicio.listarTodos(nombre, ciudad, pagina);
+        return ResponseEntity.ok(new MensajeDTO<>(false, usuarios));
+    }
+
 
     @PostMapping("/{email}/codigoVerificacion")
     public ResponseEntity<MensajeDTO<String>> enviarCodigoVerificacion(@PathVariable String email) throws Exception {

@@ -15,5 +15,8 @@ public interface UsuarioServicio {
     void cambiarPassword(String email, CambiarPasswordDTO cambiarPasswordDTO) throws Exception;
     void activarCuenta(String email, ActivarCuentaDTO activarCuentaDTO) throws Exception;
     List<InfoReporteDTO> obtenerReportesUsuario(String id);
+    //Por Criterios
+    List<UsuarioDTO> listarTodos(String nombre, String ciudad, int pagina) throws Exception;
+
 
 }
