@@ -38,12 +38,12 @@ public class UsuarioControlador {
         return ResponseEntity.ok(new MensajeDTO<>(false, "Cuenta eliminada correctamente."));
     }
 
-    // Obtener información de un usuario
     @GetMapping("/{id}")
     public ResponseEntity<MensajeDTO<UsuarioDTO>> obtener(@PathVariable String id) throws Exception {
-        usuarioServicio.obtener(id);
-        return ResponseEntity.ok(new MensajeDTO<>(false, null));
+        UsuarioDTO dto = usuarioServicio.obtener(id);
+        return ResponseEntity.ok(new MensajeDTO<>(false, dto));
     }
+
 
     @PostMapping("/{email}/codigoVerificacion")
     public ResponseEntity<MensajeDTO<String>> enviarCodigoVerificacion(@PathVariable String email) throws Exception {

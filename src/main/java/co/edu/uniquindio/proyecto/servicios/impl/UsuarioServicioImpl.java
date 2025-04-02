@@ -1,11 +1,16 @@
 package co.edu.uniquindio.proyecto.servicios.impl;
 
 import co.edu.uniquindio.proyecto.dto.*;
+import co.edu.uniquindio.proyecto.mapper.UsuarioMapper;
 import co.edu.uniquindio.proyecto.modelo.documents.Usuario;
+import co.edu.uniquindio.proyecto.modelo.enums.EstadoUsuario;
 import co.edu.uniquindio.proyecto.modelo.enums.Rol;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.servicios.UsuarioServicio;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,40 +20,44 @@ import java.util.List;
 public class UsuarioServicioImpl implements UsuarioServicio {
 
     private final UsuarioRepositorio usuarioRepo;
+    private final UsuarioMapper usuarioMapper; // <-- inyectado como @Component
 
     @Override
     public void crear(CrearUsuarioDTO dto) throws Exception {
-        // Validación: evitar emails repetidos (opcional)
         if (usuarioRepo.findByEmail(dto.getEmail()).isPresent()) {
             throw new Exception("El correo ya está registrado");
         }
-        Usuario usuario = Usuario.builder()
-                .nombre(dto.getNombre())
-                .email(dto.getEmail())
-                .password(dto.getPassword()) // puedes encriptarla si quieres
-                .telefono(dto.getTelefono())
-                .ciudad(dto.getCiudad())
-                .direccion(dto.getDireccion())
-                .rol(Rol.CLIENTE) // o el rol que manejes por defecto
-                .build();
+        Usuario usuario = usuarioMapper.toDocument(dto);
+        usuario.setRol(Rol.CLIENTE);
+        usuario.setEstado(EstadoUsuario.INACTIVO);
         usuarioRepo.save(usuario);
     }
 
-
     @Override
-    public void editar(EditarUsuarioDTO editarUsuarioDTO) throws Exception {
-
+    public void editar(EditarUsuarioDTO cuenta) throws Exception {
+        ObjectId objectId = new ObjectId(cuenta.getId());
+        Usuario usuario = usuarioRepo.findById(objectId)
+                .orElseThrow(() -> new Exception("El usuario con ID " + cuenta.getId() + " no existe."));
+        usuarioMapper.EditarUsuarioDTO(cuenta, usuario);
+        usuarioRepo.save(usuario);
     }
 
     @Override
     public void eliminar(String id) throws Exception {
-
+        Usuario usuario = usuarioRepo.findById(new ObjectId(id))
+                .orElseThrow(() -> new Exception("El usuario con ID " + id + " no existe."));
+        // Cambio lógico de estado
+        usuario.setEstado(EstadoUsuario.ELIMINADO);
+        usuarioRepo.save(usuario);
     }
 
     @Override
     public UsuarioDTO obtener(String id) throws Exception {
-        return null;
+        Usuario usuario = usuarioRepo.findById(new ObjectId(id))
+                .orElseThrow(() -> new Exception("El usuario con ID " + id + " no existe."));
+        return usuarioMapper.toDTO(usuario);
     }
+
 
     @Override
     public void enviarCodigoVerificacion(String email) throws Exception {
@@ -82,33 +91,9 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 //    }
 //    private final UsuarioMapper usuarioMapper;
 ////
-//    @Override
-//    public void crear(CrearUsuarioDTO crearUsuarioDTO) throws Exception {
-//        // Validar si el email ya está en uso
-//        if (usuarioRepo.findByEmail(crearUsuarioDTO.getEmail()).isPresent()) {
-//            throw new Exception("El correo " + crearUsuarioDTO.getEmail() + " ya está registrado.");
-//        }
-//        // Mapear el DTO al documento Usuario
-//        Usuario usuario = usuarioMapper.toDocument(crearUsuarioDTO);
-//        // Asignar valores adicionales obligatorios
-//        usuario.setRol(Rol.CLIENTE);
-//        usuario.setEstado(EstadoUsuario.INACTIVO);
-//        // Guardar en base de datos
-//        usuarioRepo.save(usuario);
-//    }
 //
-//    @Override
-//    public void editar(EditarUsuarioDTO cuenta) throws Exception {
-//        ObjectId objectId = new ObjectId(cuenta.getId());
-//        Usuario usuario = usuarioRepo.findById(objectId)
-//                .orElseThrow(() -> new Exception("El usuario con ID " + cuenta.getId() + " no existe."));
-//        // Actualizar campos permitidos
-//        usuario.setNombre(cuenta.getNombre());
-//        usuario.setTelefono(cuenta.getTelefono());
-//        usuario.setDireccion(cuenta.getDireccion());
-//        usuario.setCiudad(cuenta.getCiudad());
-//        usuarioRepo.save(usuario);
-//    }
+//
+
 //
 //    @Override
 //    public void eliminar(String id) throws Exception {

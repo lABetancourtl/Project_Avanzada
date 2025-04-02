@@ -16,4 +16,5 @@ public interface UsuarioServicio {
     void activarCuenta(String email, ActivarCuentaDTO activarCuentaDTO) throws Exception;
     List<InfoReporteDTO> obtenerReportesUsuario(String id);
 
+
 }
