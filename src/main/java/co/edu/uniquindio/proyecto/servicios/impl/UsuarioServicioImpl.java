@@ -50,45 +50,13 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         usuario.setEstado(EstadoUsuario.ELIMINADO);
         usuarioRepo.save(usuario);
     }
-//Pregunta es mejor asi ???, o mejor uno y no
+
     @Override
-    public UsuarioDTO obtener(String identificador) throws Exception {
-        Usuario usuario;
-        // Verifica si es un ObjectId válido (24 caracteres hexadecimales)
-        if (ObjectId.isValid(identificador)) {
-            usuario = usuarioRepo.findById(new ObjectId(identificador))
-                    .orElseThrow(() -> new Exception("El usuario con ID " + identificador + " no existe."));
-        } else {
-            // Si no es ID, intenta buscar por correo
-            usuario = usuarioRepo.findByEmail(identificador)
-                    .orElseThrow(() -> new Exception("No existe un usuario con el correo " + identificador));
-        }
-        if (usuario.getEstado() == EstadoUsuario.ELIMINADO) {
-            throw new Exception("El usuario ha sido eliminado.");
-        }
+    public UsuarioDTO obtener(String id) throws Exception {
+        Usuario usuario = usuarioRepo.findById(new ObjectId(id))
+                .orElseThrow(() -> new Exception("El usuario con ID " + id + " no existe."));
         return usuarioMapper.toDTO(usuario);
     }
-//¿Buscar por todos??? O solo por email
-    @Override
-    public List<UsuarioDTO> listarTodos(String nombre, String ciudad, int pagina) {
-        Pageable pageable = PageRequest.of(pagina, 10); // 10 usuarios por página
-        List<Usuario> resultados;
-        if (nombre != null && ciudad != null) {
-            resultados = usuarioRepo.findByNombreContainingIgnoreCaseAndCiudadContainingIgnoreCaseAndEstado(
-                    nombre, ciudad, EstadoUsuario.ACTIVO, pageable);
-        } else if (nombre != null) {
-            resultados = usuarioRepo.findByNombreContainingIgnoreCaseAndEstado(nombre, EstadoUsuario.ACTIVO, pageable);
-        } else if (ciudad != null) {
-            resultados = usuarioRepo.findByCiudadContainingIgnoreCaseAndEstado(ciudad, EstadoUsuario.ACTIVO, pageable);
-        } else {
-            resultados = usuarioRepo.findByEstado(EstadoUsuario.ACTIVO, pageable);
-        }
-        return resultados.stream()
-                .map(usuarioMapper::toDTO)
-                .toList();
-    }
-
-
 
 
     @Override

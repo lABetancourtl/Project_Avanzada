@@ -21,9 +21,6 @@ public interface UsuarioRepositorio extends MongoRepository<Usuario, ObjectId> {
 
     List<Usuario> findByNombreContainingAndCiudad(String nombre, String ciudad);
 
-    //ya acepta paginación
-    List<Usuario> findByEstado(EstadoUsuario estado, Pageable pageable);
-
     List<Usuario> findByNombreContainingIgnoreCaseAndEstado(String nombre, EstadoUsuario estado, Pageable pageable);
 
     List<Usuario> findByCiudadContainingIgnoreCaseAndEstado(String ciudad, EstadoUsuario estado, Pageable pageable);

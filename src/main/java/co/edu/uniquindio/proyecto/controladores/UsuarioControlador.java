@@ -38,21 +38,10 @@ public class UsuarioControlador {
         return ResponseEntity.ok(new MensajeDTO<>(false, "Cuenta eliminada correctamente."));
     }
 
-    // Obtener información de un usuario
     @GetMapping("/{id}")
     public ResponseEntity<MensajeDTO<UsuarioDTO>> obtener(@PathVariable String id) throws Exception {
-        usuarioServicio.obtener(id);
-        return ResponseEntity.ok(new MensajeDTO<>(false, null));
-    }
-    //Pregunta para el docente si va o no va
-    @GetMapping
-    public ResponseEntity<MensajeDTO<List<UsuarioDTO>>> listarTodos(
-            @RequestParam(required = false) String nombre,
-            @RequestParam(required = false) String ciudad,
-            @RequestParam(defaultValue = "0") int pagina
-    ) throws Exception {
-        List<UsuarioDTO> usuarios = usuarioServicio.listarTodos(nombre, ciudad, pagina);
-        return ResponseEntity.ok(new MensajeDTO<>(false, usuarios));
+        UsuarioDTO dto = usuarioServicio.obtener(id);
+        return ResponseEntity.ok(new MensajeDTO<>(false, dto));
     }
 
 
