@@ -9,8 +9,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Categoria {
@@ -20,5 +18,11 @@ public class Categoria {
     private ObjectId id;
 
     private String nombre;
-    private String descripcion;
+    private String icono;
+
+    @Builder
+    public Categoria(String nombre, String icono) {
+        this.nombre = nombre;
+        this.icono = icono;
+    }
 }

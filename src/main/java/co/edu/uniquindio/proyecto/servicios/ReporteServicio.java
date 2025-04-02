@@ -7,16 +7,16 @@ import jakarta.validation.Valid;
 
 public interface ReporteServicio {
 
+    void crear(@Valid CrearReporteDTO reporte) throws Exception;
 
-    void crear(@Valid CrearReporteDTO reporte);
+    void editar(String id, @Valid EditarReporteDTO reporte) throws Exception;
 
-    void editar(String id, @Valid EditarReporteDTO reporte);
+    void eliminar(String id) throws Exception;
 
-    void eliminar(String id);
+    ReporteDTO obtener(String id) throws Exception;
 
-    ReporteDTO obtener(String id);
+    void marcarImportante(String id) throws Exception;
 
-    void marcarImportante(String id);
-
-    void cambiarEstado(String id, String nuevoEstado);
+    void cambiarEstado(String id, String nuevoEstado) throws Exception;
 }
+
