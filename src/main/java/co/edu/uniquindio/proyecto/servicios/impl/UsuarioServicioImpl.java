@@ -24,7 +24,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
     @Override
     public void crear(CrearUsuarioDTO dto) throws Exception {
-        if (usuarioRepo.findByEmail(dto.getEmail()).isPresent()) {
+        if (usuarioRepo.findByEmail(dto.email()).isPresent()) {
             throw new Exception("El correo ya está registrado");
         }
         Usuario usuario = usuarioMapper.toDocument(dto);
@@ -35,9 +35,9 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
     @Override
     public void editar(EditarUsuarioDTO cuenta) throws Exception {
-        ObjectId objectId = new ObjectId(cuenta.getId());
+        ObjectId objectId = cuenta.id();
         Usuario usuario = usuarioRepo.findById(objectId)
-                .orElseThrow(() -> new Exception("El usuario con ID " + cuenta.getId() + " no existe."));
+                .orElseThrow(() -> new Exception("El usuario con ID " + cuenta.id() + " no existe."));
         usuarioMapper.editarUsuarioDTO(cuenta, usuario);
         usuarioRepo.save(usuario);
     }

@@ -4,12 +4,13 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 
 
 public record EditarUsuarioDTO (
 
             @NotBlank(message = "El ID es obligatorio")
-            String id,
+            ObjectId id,
 
             @NotBlank(message = "El nombre es obligatorio")
             String nombre,
