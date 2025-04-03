@@ -15,8 +15,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Reporte {
@@ -26,14 +24,27 @@ public class Reporte {
     private ObjectId id;
     
     private String titulo;
-    private ObjectId categoriaid;
+    private ObjectId categoriaId;
     private String descripcion;
     private Ubicacion ubicacion;
     private List<String> fotos;
-    private ObjectId usuarioId; // Referencia al usuario que creó el reporte
+    private ObjectId clienteId; // Referencia al usuario que creó el reporte
     private LocalDateTime fecha;
     private List<HistorialReporte> historial;
     private EstadoReporte estadoActual;
     private int contadorImportante;
 
+    @Builder
+    public Reporte(String titulo, ObjectId categoriaid, String descripcion, Ubicacion ubicacion, List<String> fotos, ObjectId usuarioId, LocalDateTime fecha, List<HistorialReporte> historial, EstadoReporte estadoActual, int contadorImportante) {
+        this.titulo = titulo;
+        this.categoriaId = categoriaid;
+        this.descripcion = descripcion;
+        this.ubicacion = ubicacion;
+        this.fotos = fotos;
+        this.clienteId = usuarioId;
+        this.fecha = fecha;
+        this.historial = historial;
+        this.estadoActual = estadoActual;
+        this.contadorImportante = contadorImportante;
+    }
 }

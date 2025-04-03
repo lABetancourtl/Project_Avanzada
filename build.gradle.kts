@@ -35,8 +35,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0")
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.mapstruct:mapstruct:1.5.5.Final") // ✅ NUEVO
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final") // ✅ NUEVO
+    implementation("org.mapstruct:mapstruct:1.6.3") // ✅ NUEVO
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3") // ✅ NUEVO
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

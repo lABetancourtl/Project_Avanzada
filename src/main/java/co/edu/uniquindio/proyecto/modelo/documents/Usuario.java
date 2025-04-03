@@ -12,8 +12,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Usuario {

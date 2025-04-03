@@ -10,12 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ReporteMapper {
 
-
-    @Mapping(source = "clienteId", target = "usuarioId")       // mapea el ID del cliente al campo usuarioId
-    @Mapping(source = "categoriaId", target = "categoriaid")
     Reporte toDocument(CrearReporteDTO dto);
-
-
     //  ReporteDTO toDTO(Reporte reporte);
 
     default ObjectId map(String value) {

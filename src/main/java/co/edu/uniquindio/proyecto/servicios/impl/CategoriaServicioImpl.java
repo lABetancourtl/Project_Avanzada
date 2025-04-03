@@ -26,8 +26,8 @@ public class CategoriaServicioImpl implements CategoriaServicio {
     @Override
     public void crear(CrearCategoriaDTO dto) throws Exception {
         // Validar si ya existe una categoría con el mismo nombre (opcional pero recomendable)
-        if (categoriaRepositorio.existsByNombreIgnoreCase(dto.getNombre())) {
-            throw new Exception("Ya existe una categoría con el nombre: " + dto.getNombre());
+        if (categoriaRepositorio.existsByNombreIgnoreCase(dto.nombre())) {
+            throw new Exception("Ya existe una categoría con el nombre: " + dto.nombre());
         }
         Categoria categoria = categoriaMapper.toDocument(dto);
         categoriaRepositorio.save(categoria);

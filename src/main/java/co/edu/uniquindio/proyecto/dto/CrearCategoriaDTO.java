@@ -5,13 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class CrearCategoriaDTO {
+public record CrearCategoriaDTO(
 
     @NotBlank(message = "El nombre es obligatorio")
-    private String nombre;
+    String nombre,
+    String icono // puede ser opcional, por eso no usamos @NotBlank
+){
 
-    private String icono; // puede ser opcional, por eso no usamos @NotBlank
 }

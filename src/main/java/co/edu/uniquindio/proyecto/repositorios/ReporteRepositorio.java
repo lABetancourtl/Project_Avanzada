@@ -13,7 +13,7 @@ import java.util.List;
 public interface ReporteRepositorio extends MongoRepository<Reporte, ObjectId> {
 
     // Buscar reportes por el ID del usuario que los creó
-    List<Reporte> findByUsuarioId(ObjectId usuarioId);
+    List<Reporte> findByClienteId(ObjectId usuarioId);
 
     // Buscar reportes por estado
     List<Reporte> findByEstadoActual(String estadoActual);
@@ -22,5 +22,5 @@ public interface ReporteRepositorio extends MongoRepository<Reporte, ObjectId> {
     List<Reporte> findByTituloContainingIgnoreCase(String titulo);
 
     // Buscar reportes en una categoría específica
-    List<Reporte> findByCategoriaid(ObjectId categoriaId);
+    List<Reporte> findByCategoriaId(ObjectId categoriaId);
 }

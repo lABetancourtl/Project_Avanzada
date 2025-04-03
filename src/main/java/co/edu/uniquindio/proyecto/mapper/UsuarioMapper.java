@@ -20,13 +20,6 @@ public interface UsuarioMapper {
         return value != null ? value.toHexString() : null;
     }
 
-    // Actualiza un documento existente con los valores del DTO (para editar)
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "email", ignore = true)
-    @Mapping(target = "password", ignore = true)
-    @Mapping(target = "rol", ignore = true)
-    @Mapping(target = "estado", ignore = true)
     void editarUsuarioDTO(EditarUsuarioDTO dto, @MappingTarget Usuario usuario);
 
 }
