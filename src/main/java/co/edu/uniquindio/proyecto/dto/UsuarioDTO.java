@@ -1,19 +1,14 @@
 package co.edu.uniquindio.proyecto.dto;
 
-import lombok.*;
+public record UsuarioDTO(
+        String id,
+        String nombre,
+        String email,
+        String telefono,
+        String ciudad,
+        String direccion,
+        String estado,
+        String rol
+    ) {
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-public class UsuarioDTO {
-    private String id;
-    private String nombre;
-    private String email;
-    private String telefono;
-    private String ciudad;
-    private String direccion;
-    private String estado;
-    private String rol;
 }
