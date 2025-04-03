@@ -32,9 +32,6 @@ public class Usuario {
     private CodigoValidacion codigoValidacion; // ← embebida
     private String direccion;
 
-    // 👇 Elimina esto si no se usa
-    // private LocalDateTime fechaRegistro;
-
     // También puedes eliminar este constructor si usas @Builder y no necesitas lógica extra
     @Builder
     public Usuario(String email, Rol rol, String telefono, String password, String nombre, String ciudad, EstadoUsuario estado, CodigoValidacion codigoValidacion, String direccion) {

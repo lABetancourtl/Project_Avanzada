@@ -38,7 +38,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         ObjectId objectId = new ObjectId(cuenta.getId());
         Usuario usuario = usuarioRepo.findById(objectId)
                 .orElseThrow(() -> new Exception("El usuario con ID " + cuenta.getId() + " no existe."));
-        usuarioMapper.EditarUsuarioDTO(cuenta, usuario);
+        usuarioMapper.editarUsuarioDTO(cuenta, usuario);
         usuarioRepo.save(usuario);
     }
 

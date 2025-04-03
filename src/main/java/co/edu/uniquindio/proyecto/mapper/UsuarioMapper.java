@@ -27,7 +27,7 @@ public interface UsuarioMapper {
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "rol", ignore = true)
     @Mapping(target = "estado", ignore = true)
-    void EditarUsuarioDTO(EditarUsuarioDTO dto, @MappingTarget Usuario usuario);
+    void editarUsuarioDTO(EditarUsuarioDTO dto, @MappingTarget Usuario usuario);
 
 }
 
