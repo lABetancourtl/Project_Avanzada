@@ -29,7 +29,7 @@ public class ReporteServicioImpl implements ReporteServicio {
     @Override
     public void crear(CrearReporteDTO dto) throws Exception {
         // Verificamos que el usuario exista y esté activo
-        Usuario usuario = usuarioRepo.findById(new ObjectId(dto.getClienteId()))
+        Usuario usuario = usuarioRepo.findById(new ObjectId(dto.clienteId()))
                 .orElseThrow(() -> new Exception("El usuario no existe"));
         if (usuario.getEstado() == EstadoUsuario.ELIMINADO) {
             throw new Exception("El usuario está inactivo o eliminado");
