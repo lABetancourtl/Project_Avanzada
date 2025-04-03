@@ -7,27 +7,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+public record CrearReporteDTO(
+        @NotBlank(message = "El título es obligatorio")
+        String titulo,
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class CrearReporteDTO {
-    @NotBlank(message = "El título es obligatorio")
-    private String titulo;
-    
-    @NotBlank(message = "La descripción es obligatoria")
-    private String descripcion;
-    
-    @NotBlank(message = "El ID del cliente es obligatorio")
-    private String clienteId;
-    
-    @NotNull(message = "La ubicación es obligatoria")
-    private UbicacionDTO ubicacion;
-    
-    @NotBlank(message = "La categoría es obligatoria")
-    private String categoriaId;
-    
-    private boolean importante;
-    
-    private List<String> fotos;
-}
+        @NotBlank(message = "La descripción es obligatoria")
+        String descripcion,
+
+        @NotBlank(message = "El ID del cliente es obligatorio")
+        String clienteId,
+
+        @NotNull(message = "La ubicación es obligatoria")
+        UbicacionDTO ubicacion,
+
+        @NotBlank(message = "La categoría es obligatoria")
+        String categoriaId,
+
+        boolean importante,
+
+        List<String> fotos
+){}
