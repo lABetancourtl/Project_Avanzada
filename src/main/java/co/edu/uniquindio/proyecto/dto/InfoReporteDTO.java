@@ -1,23 +1,27 @@
 package co.edu.uniquindio.proyecto.dto;
 
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-public record InfoReporteDTO(
-        String id,
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class InfoReporteDTO {
 
-        String titulo,
+    private String id;
 
-        String descripcion,
+    private String titulo;
 
-        String categoria,
+    private String descripcion;
 
-        String ciudad,
+    private String categoria;
 
-        String estado,
+    private String ciudad;
 
-        LocalDateTime fechaCreacion
-) {
+    private String estado;
 
-
+    private LocalDateTime fechaCreacion;
 }
