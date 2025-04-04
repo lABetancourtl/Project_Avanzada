@@ -22,8 +22,5 @@ public record CrearUsuarioDTO (
         String telefono,
 
         @NotBlank(message = "La ciudad es obligatoria")
-        String ciudad,
-
-        @NotBlank(message = "La dirección es obligatoria")
-        String direccion
+        String ciudad
 ){}

@@ -11,6 +11,7 @@ import co.edu.uniquindio.proyecto.modelo.enums.Rol;
 import co.edu.uniquindio.proyecto.repositorios.CategoriaRepositorio;
 import co.edu.uniquindio.proyecto.servicios.CategoriaServicio;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,9 +41,14 @@ public class CategoriaServicioImpl implements CategoriaServicio {
     }
 
     @Override
-    public void eliminar(String id) {
-
+    public void eliminar(String id) throws Exception {
+        ObjectId objectId = new ObjectId(id);
+        if (!categoriaRepositorio.existsById(objectId)) {
+            throw new Exception("No se encontró una categoría con el ID: " + objectId);
+        }
+        categoriaRepositorio.deleteById(objectId);
     }
+
 
     @Override
     public List<CategoriaDTO> listar() {
