@@ -7,8 +7,6 @@ import co.edu.uniquindio.proyecto.modelo.enums.EstadoUsuario;
 import co.edu.uniquindio.proyecto.modelo.enums.Rol;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.servicios.UsuarioServicio;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
@@ -19,41 +17,46 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UsuarioServicioImpl implements UsuarioServicio {
 
-    private final UsuarioRepositorio usuarioRepo;
-    private final UsuarioMapper usuarioMapper; // <-- inyectado como @Component
+    private final UsuarioRepositorio usuarioRepositorio;
+    private final UsuarioMapper usuarioMapper;
 
     @Override
-    public void crear(CrearUsuarioDTO dto) throws Exception {
-        if (usuarioRepo.findByEmail(dto.email()).isPresent()) {
-            throw new Exception("El correo ya está registrado");
+    public void crear(CrearUsuarioDTO crearUsuarioDTO) throws Exception {
+        if( existeEmail(crearUsuarioDTO.email()) ){
+            throw new Exception("El correo "+crearUsuarioDTO.email()+" ya está en uso");
         }
-        Usuario usuario = usuarioMapper.toDocument(dto);
-        usuario.setRol(Rol.CLIENTE);
-        usuario.setEstado(EstadoUsuario.INACTIVO);
-        usuarioRepo.save(usuario);
+        Usuario usuario = usuarioMapper.toDocument(crearUsuarioDTO);
+        usuarioRepositorio.save(usuario);
     }
 
     @Override
-    public void editar(EditarUsuarioDTO cuenta) throws Exception {
-        ObjectId objectId = cuenta.id();
-        Usuario usuario = usuarioRepo.findById(objectId)
-                .orElseThrow(() -> new Exception("El usuario con ID " + cuenta.id() + " no existe."));
-        usuarioMapper.editarUsuarioDTO(cuenta, usuario);
-        usuarioRepo.save(usuario);
+    public void editar(EditarUsuarioDTO editarUsuarioDTO) throws Exception {
+        ObjectId objectId = editarUsuarioDTO.id();
+        Usuario usuario = usuarioRepositorio.findById(objectId)
+                .orElseThrow(() -> new Exception("El usuario con ID " + editarUsuarioDTO.id() + " no existe."));
+        usuarioMapper.editarUsuarioDTO(editarUsuarioDTO, usuario);
+        usuarioRepositorio.save(usuario);
     }
 
     @Override
     public void eliminar(String id) throws Exception {
-        Usuario usuario = usuarioRepo.findById(new ObjectId(id))
+        if (!ObjectId.isValid(id)) {
+            throw new Exception("ID inválido: " + id);
+        }
+        ObjectId objectId = new ObjectId(id);
+        Usuario usuario = usuarioRepositorio.findById(objectId)
                 .orElseThrow(() -> new Exception("El usuario con ID " + id + " no existe."));
-        // Cambio lógico de estado
         usuario.setEstado(EstadoUsuario.ELIMINADO);
-        usuarioRepo.save(usuario);
+        usuarioRepositorio.save(usuario);
     }
 
     @Override
     public UsuarioDTO obtener(String id) throws Exception {
-        Usuario usuario = usuarioRepo.findById(new ObjectId(id))
+        if (!ObjectId.isValid(id)) {
+            throw new Exception("ID inválido: " + id);
+        }
+        ObjectId objectId = new ObjectId(id);
+        Usuario usuario = usuarioRepositorio.findById(objectId)
                 .orElseThrow(() -> new Exception("El usuario con ID " + id + " no existe."));
         return usuarioMapper.toDTO(usuario);
     }
@@ -79,4 +82,9 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
         return null;
     }
+
+    private boolean existeEmail(String email) {
+        return usuarioRepositorio.findByEmail(email).isPresent();
+    }
+
 }
