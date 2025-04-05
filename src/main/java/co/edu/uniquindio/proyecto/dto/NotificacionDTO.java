@@ -6,12 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-public record NotificacionDTO (
-        String id,
-        String mensaje,
-        LocalDateTime fecha,
-        boolean leida,
-        String tipo,
-        String reporteId,
-        String idUsuario
-){}
+public record NotificacionDTO(
+        String titulo,
+        String cuerpo,
+        String topic
+) {}

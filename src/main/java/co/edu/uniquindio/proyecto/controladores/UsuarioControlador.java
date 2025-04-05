@@ -17,25 +17,10 @@ public class UsuarioControlador {
 
     private final UsuarioServicio usuarioServicio;
 
-    // Registro de usuario
-    @PostMapping
-    public ResponseEntity<MensajeDTO<String>> crear(@Valid @RequestBody CrearUsuarioDTO cuenta) throws Exception {
-        usuarioServicio.crear(cuenta);
-        return ResponseEntity.ok(new MensajeDTO<>(false, "Registro exitoso. Verifica tu correo para activar tu cuenta."));
-    }
-
-    // Edición de perfil
-    @PutMapping("/{id}")
-    public ResponseEntity<MensajeDTO<String>> editar(@Valid @RequestBody EditarUsuarioDTO cuenta) throws Exception {
-        usuarioServicio.editar(cuenta);
-        return ResponseEntity.ok(new MensajeDTO<>(false, "Perfil actualizado correctamente."));
-    }
-
-    // Eliminación lógica de cuenta
-    @DeleteMapping("/{id}")
-    public ResponseEntity<MensajeDTO<String>> eliminar(@PathVariable String id) throws Exception {
-        usuarioServicio.eliminar(id);
-        return ResponseEntity.ok(new MensajeDTO<>(false, "Cuenta eliminada correctamente."));
+    @GetMapping("/{email}/reportes")
+    public ResponseEntity<MensajeDTO<List<InfoReporteDTO>>> obtenerReportesUsuario(@PathVariable String id) throws Exception {
+        List<InfoReporteDTO> lista = usuarioServicio.obtenerReportesUsuario(id);
+        return ResponseEntity.ok(new MensajeDTO<>(false, lista));
     }
 
     @GetMapping("/{id}")
@@ -44,11 +29,35 @@ public class UsuarioControlador {
         return ResponseEntity.ok(new MensajeDTO<>(false, dto));
     }
 
+    // Listar usuarios con filtros y paginación
+    @GetMapping
+    public ResponseEntity<MensajeDTO<List<UsuarioDTO>>> listarTodos(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String ciudad,
+            @RequestParam(defaultValue = "0") int pagina
+    ) {
+        List<UsuarioDTO> lista = usuarioServicio.listarTodos(nombre, ciudad, pagina);
+        return ResponseEntity.ok(new MensajeDTO<>(false, lista));
+    }
+
+    // Registro de usuario
+    @PostMapping
+    public ResponseEntity<MensajeDTO<String>> crear(@Valid @RequestBody CrearUsuarioDTO cuenta) throws Exception {
+        usuarioServicio.crear(cuenta);
+        return ResponseEntity.ok(new MensajeDTO<>(false, "Registro exitoso. Verifica tu correo para activar tu cuenta."));
+    }
 
     @PostMapping("/{email}/codigoVerificacion")
     public ResponseEntity<MensajeDTO<String>> enviarCodigoVerificacion(@PathVariable String email) throws Exception {
         usuarioServicio.enviarCodigoVerificacion(email);
         return ResponseEntity.ok(new MensajeDTO<>(false, "Codigo enviado correctamente."));
+    }
+
+    // Edición de perfil
+    @PutMapping("/{id}")
+    public ResponseEntity<MensajeDTO<String>> editar(@Valid @RequestBody EditarUsuarioDTO cuenta) throws Exception {
+        usuarioServicio.editar(cuenta);
+        return ResponseEntity.ok(new MensajeDTO<>(false, "Perfil actualizado correctamente."));
     }
 
     @PutMapping("/{email}/password")
@@ -63,24 +72,16 @@ public class UsuarioControlador {
         return ResponseEntity.ok(new MensajeDTO<>(false, "Activado correctamente."));
     }
 
-    @GetMapping("/{email}/reportes")
-    public ResponseEntity<MensajeDTO<List<InfoReporteDTO>>> obtenerReportesUsuario(@PathVariable String id) throws Exception {
-        List<InfoReporteDTO> lista = usuarioServicio.obtenerReportesUsuario(id);
-        return ResponseEntity.ok(new MensajeDTO<>(false, lista));
+    // Eliminación lógica de cuenta
+    @DeleteMapping("/{id}")
+    public ResponseEntity<MensajeDTO<String>> eliminar(@PathVariable String id) throws Exception {
+        usuarioServicio.eliminar(id);
+        return ResponseEntity.ok(new MensajeDTO<>(false, "Cuenta eliminada correctamente."));
     }
 
     //-----------------Preguntar al profesor----------------------------------------
 
-    // Listar usuarios con filtros y paginación
-    @GetMapping
-    public ResponseEntity<MensajeDTO<List<UsuarioDTO>>> listarTodos(
-            @RequestParam(required = false) String nombre,
-            @RequestParam(required = false) String ciudad,
-            @RequestParam(defaultValue = "0") int pagina
-    ) {
-        List<UsuarioDTO> lista = usuarioServicio.listarTodos(nombre, ciudad, pagina);
-        return ResponseEntity.ok(new MensajeDTO<>(false, lista));
-    }
+
 //
 //    // Login de usuario
 //    @PostMapping("/login")
