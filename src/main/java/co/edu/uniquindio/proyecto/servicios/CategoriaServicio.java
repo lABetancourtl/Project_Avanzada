@@ -10,7 +10,7 @@ import java.util.List;
 public interface CategoriaServicio {
     void crear(@Valid CrearCategoriaDTO categoria) throws Exception;
 
-    void editar(String id, @Valid CrearCategoriaDTO categoria);
+    void editar(String id, @Valid CrearCategoriaDTO categoria) throws Exception;
 
     void eliminar(String id) throws Exception;
 
