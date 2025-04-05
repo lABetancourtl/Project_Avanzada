@@ -72,15 +72,15 @@ public class UsuarioControlador {
     //-----------------Preguntar al profesor----------------------------------------
 
     // Listar usuarios con filtros y paginación
-//    @GetMapping
-//    public ResponseEntity<MensajeDTO<List<UsuarioDTO>>> listarTodos(
-//            @RequestParam(required = false) String nombre,
-//            @RequestParam(required = false) String ciudad,
-//            @RequestParam(defaultValue = "0") int pagina
-//    ) {
-//        List<UsuarioDTO> lista = usuarioServicio.listarTodos(nombre, ciudad, pagina);
-//        return ResponseEntity.ok(new MensajeDTO<>(false, lista));
-//    }
+    @GetMapping
+    public ResponseEntity<MensajeDTO<List<UsuarioDTO>>> listarTodos(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String ciudad,
+            @RequestParam(defaultValue = "0") int pagina
+    ) {
+        List<UsuarioDTO> lista = usuarioServicio.listarTodos(nombre, ciudad, pagina);
+        return ResponseEntity.ok(new MensajeDTO<>(false, lista));
+    }
 //
 //    // Login de usuario
 //    @PostMapping("/login")
