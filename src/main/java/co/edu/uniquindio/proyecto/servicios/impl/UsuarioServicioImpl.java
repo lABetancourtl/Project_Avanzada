@@ -10,7 +10,10 @@ import co.edu.uniquindio.proyecto.servicios.UsuarioServicio;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +24,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
     private final UsuarioRepositorio usuarioRepositorio;
     private final UsuarioMapper usuarioMapper;
+    private final MongoTemplate mongoTemplate;
 
     @Override
     public void crear(CrearUsuarioDTO crearUsuarioDTO) throws Exception {
@@ -59,28 +63,22 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
     @Override
     public  List<UsuarioDTO> listarTodos(String nombre, String ciudad, int pagina) {
-//        if(pagina < 0) throw new RuntimeException("La página no puede ser menor a 0");
-//        // Crear criterios dinámicos
-//        Criteria criteria = new Criteria();
-//
-//        if (nombre != null && !nombre.isEmpty()) {
-//            criteria.and("nombre").regex(nombre, "i"); // Ignora a mayúsculas/minúsculas
-//        }
-//
-//        if (ciudad!= null && !ciudad.isEmpty()) {
-//            criteria.and("ciudad").regex(ciudad, "i");
-//        }
-//
-//        // Crear la consulta con los criterios y la paginación de 5 elementos por página
-//        Query query = new Query(criteria).with(pagina.of(pagina, 5));
-//
-//        List<Usuario> usuarios = mongoTemplate.find(query, Usuario.class);
-//
-//        // Convertir la lista de usuarios a una lista de DTOs
-//        return usuarios.stream()
-//                .map(usuarioMapper::toDTO)
-//                .toList();
-        return null;
+        if(pagina < 0) throw new RuntimeException("La página no puede ser menor a 0");
+        // Crear criterios dinámicos
+        Criteria criteria = new Criteria();
+        if (nombre != null && !nombre.isEmpty()) {
+            criteria.and("nombre").regex(nombre, "i"); // Ignora a mayúsculas/minúsculas
+        }
+        if (ciudad!= null && !ciudad.isEmpty()) {
+            criteria.and("ciudad").regex(ciudad, "i");
+        }
+        // Crear la consulta con los criterios y la paginación de 5 elementos por página
+        Query query = new Query(criteria).with(PageRequest.of(pagina, 5));
+        List<Usuario> usuarios = mongoTemplate.find(query, Usuario.class);
+        // Convertir la lista de usuarios a una lista de DTOs
+        return usuarios.stream()
+                .map(usuarioMapper::toDTO)
+                .toList();
     }
 
     @Override
