@@ -23,13 +23,13 @@ public interface UsuarioMapper {
     }
 
 
-//    @Mapping(target = "id", ignore = true)
-//    @Mapping(target = "estado", ignore = true)
-//    @Mapping(target = "rol", ignore = true)
-//    @Mapping(target = "fechaRegistro", ignore = true)
-//    @Mapping(target = "codigoValidacion", ignore = true)
-//    @Mapping(target = "email", ignore = true)
-//    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "estado", ignore = true)
+    @Mapping(target = "rol", ignore = true)
+    @Mapping(target = "fechaRegistro", ignore = true)
+    @Mapping(target = "codigoValidacion", ignore = true)
+    @Mapping(target = "email", ignore = true)
+    @Mapping(target = "password", ignore = true)
     void editarUsuarioDTO(EditarUsuarioDTO dto, @MappingTarget Usuario usuario);
 
 }
