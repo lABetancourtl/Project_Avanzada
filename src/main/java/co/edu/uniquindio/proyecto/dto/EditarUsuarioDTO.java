@@ -10,7 +10,7 @@ import org.bson.types.ObjectId;
 public record EditarUsuarioDTO (
 
             @NotBlank(message = "El ID es obligatorio")
-            ObjectId id,
+            String id,
 
             @NotBlank(message = "El nombre es obligatorio")
             String nombre,

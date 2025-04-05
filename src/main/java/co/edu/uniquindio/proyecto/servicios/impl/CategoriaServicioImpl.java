@@ -34,10 +34,18 @@ public class CategoriaServicioImpl implements CategoriaServicio {
         categoriaRepositorio.save(categoria);
     }
 
-
     @Override
-    public void editar(String id, CrearCategoriaDTO categoria) {
-
+    public void editar(String id, CrearCategoriaDTO categoriaDTO) throws Exception {
+        Categoria categoriaExistente = categoriaRepositorio.findById(new ObjectId(id))
+                .orElseThrow(() -> new Exception("La categoría con ID " + id + " no existe"));
+        boolean existeOtra = categoriaRepositorio.existsByNombreIgnoreCase(categoriaDTO.nombre())
+                && !categoriaExistente.getNombre().equalsIgnoreCase(categoriaDTO.nombre());
+        if (existeOtra) {
+            throw new Exception("Ya existe una categoría con el nombre: " + categoriaDTO.nombre());
+        }
+        categoriaExistente.setNombre(categoriaDTO.nombre());
+        categoriaExistente.setIcono(categoriaDTO.icono());
+        categoriaRepositorio.save(categoriaExistente);
     }
 
     @Override
@@ -49,9 +57,12 @@ public class CategoriaServicioImpl implements CategoriaServicio {
         categoriaRepositorio.deleteById(objectId);
     }
 
-
     @Override
     public List<CategoriaDTO> listar() {
-        return List.of();
+        return categoriaRepositorio.findAll()
+                .stream()
+                .map(categoriaMapper::toDTO)
+                .toList();
     }
+
 }

@@ -28,9 +28,9 @@ public class ReporteControlador {
 
     // Editar un reporte existente
     @PutMapping("/{id}")
-    public ResponseEntity<String> editar(@PathVariable String id, @Valid @RequestBody EditarReporteDTO reporte) throws Exception {
-        reporteServicio.editar(id, reporte);
-        return ResponseEntity.ok("Reporte actualizado correctamente");
+    public ResponseEntity<MensajeDTO<String>> editar(@PathVariable String id, @Valid @RequestBody EditarReporteDTO dto) throws Exception {
+        reporteServicio.editar(id, dto);
+        return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte editado correctamente"));
     }
 
     // Eliminar un reporte
