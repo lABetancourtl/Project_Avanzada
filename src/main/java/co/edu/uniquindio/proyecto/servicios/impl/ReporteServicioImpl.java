@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -58,13 +60,52 @@ public class ReporteServicioImpl implements ReporteServicio {
 
     @Override
     public void eliminarReporte(String id) {
+        // Validar el ID
+        if (!ObjectId.isValid(id)) {
+            throw new IllegalArgumentException("El ID proporcionado no es válido: " + id);
+        }
+        // Buscar el reporte por ID
+        ObjectId objectId = new ObjectId(id);
+        Optional<Reporte> optionalReporte = reporteRepositorio.findById(objectId);
+        if (optionalReporte.isEmpty()) {
+            throw new NoSuchElementException("No se encontró un reporte con el id: " + id);
+        }
+        Reporte reporte = optionalReporte.get();
+        reporte.setEstadoActual(EstadoReporte.ELIMINADO);
 
+        reporteRepositorio.save(reporte);
+        // Notificar por WebSocket que se eliminó un reporte (opcional, pero recomendable)
+        NotificacionDTO notificacionDTO = new NotificacionDTO(
+                "Reporte Eliminado",
+                "Se ha eliminado el reporte: " + reporte.getTitulo(),
+                "reports"
+        );
+        webSocketNotificationService.notificarClientes(notificacionDTO);
     }
-
+    
     @Override
-    public void actualizarReporte(String id, EditarReporteDTO reporte) throws Exception {
-
+    public void actualizarReporte(String id, EditarReporteDTO dto) throws Exception {
+        // Validar que el ID tenga un formato correcto
+        if (!ObjectId.isValid(id)) {
+            throw new IllegalArgumentException("El ID proporcionado no es válido: " + id);
+        }
+        ObjectId objectId = new ObjectId(id);
+        // Buscar el reporte existente
+        Reporte reporteExistente = reporteRepositorio.findById(objectId)
+                .orElseThrow(() -> new NoSuchElementException("No se encontró un reporte con el id: " + id));
+        // Utilizar el mapper para actualizar el documento existente
+        reporteMapper.EditarReporteDTO(dto, reporteExistente);
+        // Guardar los cambios
+        reporteRepositorio.save(reporteExistente);
+        // Notificar por WebSocket
+        NotificacionDTO notificacionDTO = new NotificacionDTO(
+                "Reporte Actualizado",
+                "Se ha actualizado el reporte: " + reporteExistente.getTitulo(),
+                "reports"
+        );
+        webSocketNotificationService.notificarClientes(notificacionDTO);
     }
+
 
     @Override
     public ReporteDTO obtener(String id) {

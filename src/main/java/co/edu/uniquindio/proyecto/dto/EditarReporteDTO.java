@@ -15,6 +15,7 @@ public record EditarReporteDTO (
 
             @NotBlank(message = "La descripción es obligatoria")
             String descripcion,
+
             UbicacionDTO ubicacion,
 
             String categoriaId,
