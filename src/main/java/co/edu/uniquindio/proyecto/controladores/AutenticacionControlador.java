@@ -15,16 +15,16 @@ public class AutenticacionControlador {
     private final AutenticacionServicio autenticacionServicio;
 
     // Validar código de activación
-    @PostMapping("/validar")
-    public ResponseEntity<String> validarCodigo(@Valid @RequestBody ValidarCodigoDTO validacion) throws Exception {
-        autenticacionServicio.validarCodigo(validacion);
-        return ResponseEntity.ok("Cuenta activada correctamente");
-    }
-
-    // Reenviar código de activación
-    @PostMapping("/reenviar/{email}")
-    public ResponseEntity<String> reenviarCodigo(@PathVariable String email) throws Exception {
-        autenticacionServicio.reenviarCodigo(email);
-        return ResponseEntity.ok("Se ha enviado un nuevo código de activación a tu correo");
-    }
+//    @PostMapping("/validar")
+//    public ResponseEntity<String> validarCodigo(@Valid @RequestBody ValidarCodigoDTO validacion) throws Exception {
+//        autenticacionServicio.validarCodigo(validacion);
+//        return ResponseEntity.ok("Cuenta activada correctamente");
+//    }
+//
+//    // Reenviar código de activación
+//    @PostMapping("/reenviar/{email}")
+//    public ResponseEntity<String> reenviarCodigo(@PathVariable String email) throws Exception {
+//        autenticacionServicio.reenviarCodigo(email);
+//        return ResponseEntity.ok("Se ha enviado un nuevo código de activación a tu correo");
+//    }
 }

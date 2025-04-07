@@ -2,6 +2,7 @@ package co.edu.uniquindio.proyecto.excepciones;
 
 import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import co.edu.uniquindio.proyecto.dto.ValidacionDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -30,7 +31,6 @@ public class RestExceptionHandler {
         return ResponseEntity.internalServerError().body( new MensajeDTO<>(true, e.getMessage()) );
     }
 
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<MensajeDTO<List<ValidacionDTO>>> validationExceptionHandler ( MethodArgumentNotValidException ex ) {
         List<ValidacionDTO> errores = new ArrayList<>();
@@ -43,6 +43,11 @@ public class RestExceptionHandler {
 
 
         return ResponseEntity.badRequest().body( new MensajeDTO<>(true, errores) );
+    }
+
+    @ExceptionHandler(RecursoNoEncontradoException.class)
+    public ResponseEntity<String> manejarRecursoNoEncontrado(RecursoNoEncontradoException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
 

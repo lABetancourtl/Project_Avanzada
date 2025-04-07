@@ -1,8 +1,11 @@
 package co.edu.uniquindio.proyecto.dto;
 
+import org.bson.types.ObjectId;
+
 public record CategoriaDTO (
-    String id,
+    ObjectId id,
     String nombre,
     String icono
-    ){
+){
+
 }

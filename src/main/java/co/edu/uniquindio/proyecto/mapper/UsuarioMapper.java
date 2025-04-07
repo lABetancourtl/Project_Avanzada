@@ -10,8 +10,10 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface UsuarioMapper {
 
-    // Convierte DTO de creación a documento
-    Usuario toDocument(CrearUsuarioDTO dto);
+    @Mapping(target = "rol", constant = "CLIENTE")
+    @Mapping(target = "estado", constant = "INACTIVO")
+    @Mapping(target = "fechaRegistro", expression = "java(java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME))")
+    Usuario toDocument(CrearUsuarioDTO dto); // Convierte DTO de creación a documento
 
     UsuarioDTO toDTO(Usuario usuario);
 
@@ -20,6 +22,14 @@ public interface UsuarioMapper {
         return value != null ? value.toHexString() : null;
     }
 
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "estado", ignore = true)
+    @Mapping(target = "rol", ignore = true)
+    @Mapping(target = "fechaRegistro", ignore = true)
+    @Mapping(target = "codigoValidacion", ignore = true)
+    @Mapping(target = "email", ignore = true)
+    @Mapping(target = "password", ignore = true)
     void editarUsuarioDTO(EditarUsuarioDTO dto, @MappingTarget Usuario usuario);
 
 }

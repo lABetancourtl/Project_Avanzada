@@ -20,27 +20,28 @@ public class Usuario {
     @EqualsAndHashCode.Include
     private ObjectId id;
 
-    private String email;
-    private Rol rol; // CLIENTE o ADMINISTRADOR
-    private String telefono;
-    private String password;
     private String nombre;
+    private String email;
+    private String telefono;
     private String ciudad;
+    private Rol rol;
     private EstadoUsuario estado; // ACTIVO, INACTIVO, ELIMINADO
+    private String password;
     private CodigoValidacion codigoValidacion; // ← embebida
-    private String direccion;
+    private String fechaRegistro;
+
 
     // También puedes eliminar este constructor si usas @Builder y no necesitas lógica extra
     @Builder
-    public Usuario(String email, Rol rol, String telefono, String password, String nombre, String ciudad, EstadoUsuario estado, CodigoValidacion codigoValidacion, String direccion) {
-        this.email = email;
-        this.rol = rol;
-        this.telefono = telefono;
-        this.password = password;
+    public Usuario(String nombre, String email, String telefono, String ciudad, Rol rol, EstadoUsuario estado, String password, CodigoValidacion codigoValidacion, String fechaRegistro) {
         this.nombre = nombre;
+        this.email = email;
+        this.telefono = telefono;
         this.ciudad = ciudad;
+        this.rol = rol;
         this.estado = estado;
+        this.password = password;
         this.codigoValidacion = codigoValidacion;
-        this.direccion = direccion;
+        this.fechaRegistro = fechaRegistro;
     }
 }
