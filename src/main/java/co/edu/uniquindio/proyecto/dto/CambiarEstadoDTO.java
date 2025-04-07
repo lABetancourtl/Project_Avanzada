@@ -1,4 +1,6 @@
 package co.edu.uniquindio.proyecto.dto;
 
-public record CambiarEstadoDTO() {
+public record CambiarEstadoDTO(
+
+) {
 }

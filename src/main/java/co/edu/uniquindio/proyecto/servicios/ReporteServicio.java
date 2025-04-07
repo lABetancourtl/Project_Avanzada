@@ -1,22 +1,25 @@
 package co.edu.uniquindio.proyecto.servicios;
 
-import co.edu.uniquindio.proyecto.dto.CrearReporteDTO;
-import co.edu.uniquindio.proyecto.dto.EditarReporteDTO;
-import co.edu.uniquindio.proyecto.dto.ReporteDTO;
+import co.edu.uniquindio.proyecto.dto.*;
+import co.edu.uniquindio.proyecto.modelo.enums.EstadoReporte;
+import co.edu.uniquindio.proyecto.modelo.vo.Ubicacion;
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 public interface ReporteServicio {
 
-    void crear(@Valid CrearReporteDTO reporte) throws Exception;
-
-    void editar(String id, @Valid EditarReporteDTO reporte) throws Exception;
-
-    void eliminar(String id) throws Exception;
-
+    void crearReporte(@Valid CrearReporteDTO reporte) throws Exception;
+    void editarReporte(String id, @Valid EditarReporteDTO reporte) throws Exception;
+    void eliminarReporte(String id) throws Exception;
+    void actualizarReporte(String id, EditarReporteDTO reporte) throws Exception;
     ReporteDTO obtener(String id) throws Exception;
-
     void marcarImportante(String id) throws Exception;
-
-    void cambiarEstado(String id, String nuevoEstado) throws Exception;
+    void cambiarEstadoReporte(String id, CambiarEstadoDTO estado) throws Exception;
+    InfoReporteDTO obtenerReporte(String id) throws Exception;
+    List<InfoReporteDTO> obtenerReportes(String categoria, EstadoReporte estadoReporte, int pagina) throws Exception;
+    List<InfoReporteDTO> obtenerReportesUsuario(String idusuario, int pagina) throws Exception;
+    List<InfoReporteDTO> obtenerReportes(Ubicacion ubicacion) throws Exception;
+    List<HistorialEstadoDTO> listarHistorialEstados(String id) throws Exception;
 }
 

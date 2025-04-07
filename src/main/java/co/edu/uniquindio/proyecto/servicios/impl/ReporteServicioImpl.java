@@ -1,14 +1,12 @@
 package co.edu.uniquindio.proyecto.servicios.impl;
 
-import co.edu.uniquindio.proyecto.dto.CrearReporteDTO;
-import co.edu.uniquindio.proyecto.dto.EditarReporteDTO;
-import co.edu.uniquindio.proyecto.dto.NotificacionDTO;
-import co.edu.uniquindio.proyecto.dto.ReporteDTO;
+import co.edu.uniquindio.proyecto.dto.*;
 import co.edu.uniquindio.proyecto.modelo.documents.Categoria;
 import co.edu.uniquindio.proyecto.modelo.documents.Reporte;
 import co.edu.uniquindio.proyecto.modelo.documents.Usuario;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoReporte;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoUsuario;
+import co.edu.uniquindio.proyecto.modelo.vo.Ubicacion;
 import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.servicios.ReporteServicio;
@@ -18,6 +16,7 @@ import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,20 +29,24 @@ public class ReporteServicioImpl implements ReporteServicio {
     private final WebSocketNotificationService webSocketNotificationService;
 
     @Override
-    public void crear(CrearReporteDTO dto) {
-        Usuario usuario = obtenerUsuarioActivo(dto.clienteId()); // Buscar usuario o lanzar excepción personalizada
+    public void crearReporte(CrearReporteDTO dto) {
+        // Buscar usuario o lanzar excepción personalizada
+        Usuario usuario = obtenerUsuarioActivo(dto.clienteId());
 
-        Reporte reporte = reporteMapper.toDocument(dto);         // Crear el documento Reporte a partir del DTO
+        // Crear el documento Reporte a partir del DTO
+        Reporte reporte = reporteMapper.toDocument(dto);
         asignarDatosAdicionales(reporte);
 
-        reporteRepositorio.save(reporte);                        // Guardar el reporte en la base de datos
+        // Guardar el reporte en la base de datos
+        reporteRepositorio.save(reporte);
 
-        notificarNuevoReporte(reporte);                          // Enviar notificación por WebSocket
+        // Enviar notificación por WebSocket
+        notificarNuevoReporte(reporte);
     }
 
 
     @Override
-    public void editar(String id, EditarReporteDTO dto) throws Exception {
+    public void editarReporte(String id, EditarReporteDTO dto) throws Exception {
         // Buscar el reporte existente
         Reporte reporte = reporteRepositorio.findById(new ObjectId(id))
                 .orElseThrow(() -> new Exception("El reporte no existe"));
@@ -54,7 +57,12 @@ public class ReporteServicioImpl implements ReporteServicio {
     }
 
     @Override
-    public void eliminar(String id) {
+    public void eliminarReporte(String id) {
+
+    }
+
+    @Override
+    public void actualizarReporte(String id, EditarReporteDTO reporte) throws Exception {
 
     }
 
@@ -69,8 +77,33 @@ public class ReporteServicioImpl implements ReporteServicio {
     }
 
     @Override
-    public void cambiarEstado(String id, String nuevoEstado) {
+    public void cambiarEstadoReporte(String id, CambiarEstadoDTO cambiarEstadoDTO) {
 
+    }
+
+    @Override
+    public InfoReporteDTO obtenerReporte(String id) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<InfoReporteDTO> obtenerReportes(String categoria, EstadoReporte estadoReporte, int pagina) throws Exception {
+        return List.of();
+    }
+
+    @Override
+    public List<InfoReporteDTO> obtenerReportesUsuario(String idusuario, int pagina) throws Exception {
+        return List.of();
+    }
+
+    @Override
+    public List<InfoReporteDTO> obtenerReportes(Ubicacion ubicacion) throws Exception {
+        return List.of();
+    }
+
+    @Override
+    public List<HistorialEstadoDTO> listarHistorialEstados(String id) throws Exception {
+        return List.of();
     }
 
     private Usuario obtenerUsuarioActivo(String clienteId) {

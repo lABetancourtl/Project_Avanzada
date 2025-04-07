@@ -1,4 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios.impl;
 
-public class ImagenServicioImpl {
+import co.edu.uniquindio.proyecto.servicios.ImagenServicio;
+
+public class ImagenServicioImpl implements ImagenServicio {
 }

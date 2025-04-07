@@ -8,14 +8,12 @@ public interface UsuarioServicio {
 
 
     void crear(CrearUsuarioDTO crearUsuarioDTO) throws Exception;
-    void editar(EditarUsuarioDTO editarUsuarioDTO) throws Exception;
+    void editar(String id, EditarUsuarioDTO editarUsuarioDTO) throws Exception;
     void eliminar(String id) throws Exception;
     UsuarioDTO obtener(String id) throws Exception;
-    void enviarCodigoVerificacion(String email) throws Exception;
-    void cambiarPassword(String email, CambiarPasswordDTO cambiarPasswordDTO) throws Exception;
-    void activarCuenta(String email, ActivarCuentaDTO activarCuentaDTO) throws Exception;
     List<InfoReporteDTO> obtenerReportesUsuario(String id);
     List<UsuarioDTO> listarTodos(String nombre, String ciudad, int pagina);
-
-
+    void enviarCodigoVerificacion(EnviarCodigoDTO enviarCoditoDTO) throws Exception;
+    void cambiarPassword(CambiarPasswordDTO cambiarPasswordDTO) throws Exception;
+    void activarCuenta(ActivarCuentaDTO activarCuentaDTO) throws Exception;
 }
