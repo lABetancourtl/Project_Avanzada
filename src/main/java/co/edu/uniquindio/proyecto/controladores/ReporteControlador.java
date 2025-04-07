@@ -32,6 +32,7 @@ public class ReporteControlador {
         reporteServicio.editar(id, reporte);
         return ResponseEntity.ok("Reporte actualizado correctamente");
     }
+    
 
     // Eliminar un reporte
     @DeleteMapping("/{id}")
