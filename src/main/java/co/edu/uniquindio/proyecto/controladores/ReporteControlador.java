@@ -27,6 +27,7 @@ public class ReporteControlador {
         reporteServicio.editarReporte(id, dto);
         return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte editado correctamente"));
     }
+    
 
     // Eliminar un reporte
     @DeleteMapping("/{id}")
