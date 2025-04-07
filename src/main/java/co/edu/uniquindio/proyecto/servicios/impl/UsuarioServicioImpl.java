@@ -5,9 +5,9 @@ import co.edu.uniquindio.proyecto.excepciones.RecursoNoEncontradoException;
 import co.edu.uniquindio.proyecto.mapper.UsuarioMapper;
 import co.edu.uniquindio.proyecto.modelo.documents.Usuario;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoUsuario;
+import co.edu.uniquindio.proyecto.modelo.vo.CodigoValidacion;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.servicios.UsuarioServicio;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -16,7 +16,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     private final UsuarioRepositorio usuarioRepositorio;
     private final UsuarioMapper usuarioMapper;
     private final MongoTemplate mongoTemplate;
+    //private final EmailServicio emailServicio;
 
     @Override
     public void crear(CrearUsuarioDTO crearUsuarioDTO) throws Exception {
@@ -32,12 +35,18 @@ public class UsuarioServicioImpl implements UsuarioServicio {
             throw new Exception("El correo "+crearUsuarioDTO.email()+" ya está en uso");
         }
         Usuario usuario = usuarioMapper.toDocument(crearUsuarioDTO);
+        String codigoActivacion = generarCodigo();
+        usuario.setCodigoValidacion(new CodigoValidacion(
+                codigoActivacion,
+                LocalDateTime.now()
+        ));
         usuarioRepositorio.save(usuario);
+        System.out.println();
     }
 
     @Override
-    public void editar(EditarUsuarioDTO editarUsuarioDTO) throws Exception {
-        Usuario usuario = obtenerUsuarioPorId(editarUsuarioDTO.id());
+    public void editar(String id,EditarUsuarioDTO editarUsuarioDTO) throws Exception {
+        Usuario usuario = obtenerUsuarioPorId(id);
         usuarioMapper.editarUsuarioDTO(editarUsuarioDTO, usuario);
         usuarioRepositorio.save(usuario);
     }
@@ -82,21 +91,6 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     }
 
     @Override
-    public void enviarCodigoVerificacion(String email) throws Exception {
-
-    }
-
-    @Override
-    public void cambiarPassword(String email, CambiarPasswordDTO cambiarPasswordDTO) throws Exception {
-
-    }
-
-    @Override
-    public void activarCuenta(String email, ActivarCuentaDTO activarCuentaDTO) throws Exception {
-
-    }
-
-    @Override
     public List<InfoReporteDTO> obtenerReportesUsuario(String id) {
 
         return null;
@@ -115,6 +109,71 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         return usuarioRepositorio.findById(objectId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el usuario con el id " + id));
     }
+
+    //Metodo usado en activarCuenta y cambiarPassword para obtener el usuario por email
+    private Usuario obtenerPorEmail(String email) throws RecursoNoEncontradoException {
+        Optional<Usuario> usuarioOptional = usuarioRepositorio.findByEmail(email);
+        if (usuarioOptional.isEmpty()) {
+            throw new RecursoNoEncontradoException("No se encontró el usuario con el email " + email);
+        }
+        return usuarioOptional.get();
+    }
+
+    private String generarCodigo() {
+        String digitos = "0123456789";
+        StringBuilder codigo = new StringBuilder();
+        for (int i = 0; i < 5; i++) {
+            int indice = (int) (Math.random() * digitos.length());
+            codigo.append(digitos.charAt(indice));
+        }
+        return codigo.toString();
+    }
+
+    @Override
+    public void enviarCodigoVerificacion(EnviarCodigoDTO enviarCodigoDTO) throws Exception {
+       Usuario usuario = obtenerPorEmail(enviarCodigoDTO.email());
+       String codigo = generarCodigo();
+       usuario.setCodigoValidacion(new CodigoValidacion(
+               codigo,
+               LocalDateTime.now()
+       ));
+       usuarioRepositorio.save(usuario);
+    }
+
+    @Override
+    public void cambiarPassword(CambiarPasswordDTO cambiarPasswordDTO) throws Exception {
+        Usuario usuario = obtenerPorEmail(cambiarPasswordDTO.email());
+        if(!usuario.getCodigoValidacion().getCodigo().equals(cambiarPasswordDTO.codigoValidacion())) {
+            throw new Exception("El código de verificación es incorrecto");
+        }
+        if (usuario.getCodigoValidacion() == null) {
+            throw new Exception("No usuario no tiene un código de verificación");
+        }
+        if(!LocalDateTime.now().isBefore(usuario.getCodigoValidacion().getFechaCreacion().plusMinutes(15))) {
+            throw new Exception("El código de verificación ha caducado");
+        }
+        usuario.setPassword(cambiarPasswordDTO.nuevaPassword());
+        usuario.setCodigoValidacion(null);
+        usuarioRepositorio.save(usuario);
+    }
+
+    @Override
+    public void activarCuenta(ActivarCuentaDTO activarCuentaDTO) throws Exception {
+        Usuario usuario = obtenerPorEmail(activarCuentaDTO.email());
+        if(!usuario.getCodigoValidacion().getCodigo().equals(activarCuentaDTO.codigoValidacion())) {
+            throw new Exception("El código de verificación es incorrecto");
+        }
+        if(!LocalDateTime.now().isBefore(usuario.getCodigoValidacion().getFechaCreacion().plusMinutes(15))) {
+            throw new Exception("El código de verificación ha caducado");
+        }
+        if (usuario.getCodigoValidacion() == null) {
+            throw new Exception("No se encontró el usuario con el email ");
+        }
+        usuario.setEstado(EstadoUsuario.ACTIVO);
+        usuario.setCodigoValidacion(null);
+        usuarioRepositorio.save(usuario);
+    }
+
 
 
 }

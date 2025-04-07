@@ -2,12 +2,9 @@ package co.edu.uniquindio.proyecto.servicios.impl;
 
 import co.edu.uniquindio.proyecto.dto.CategoriaDTO;
 import co.edu.uniquindio.proyecto.dto.CrearCategoriaDTO;
-import co.edu.uniquindio.proyecto.dto.CrearUsuarioDTO;
+import co.edu.uniquindio.proyecto.dto.InfocategoriaDTO;
 import co.edu.uniquindio.proyecto.mapper.CategoriaMapper;
 import co.edu.uniquindio.proyecto.modelo.documents.Categoria;
-import co.edu.uniquindio.proyecto.modelo.documents.Usuario;
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoUsuario;
-import co.edu.uniquindio.proyecto.modelo.enums.Rol;
 import co.edu.uniquindio.proyecto.repositorios.CategoriaRepositorio;
 import co.edu.uniquindio.proyecto.servicios.CategoriaServicio;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +22,7 @@ public class CategoriaServicioImpl implements CategoriaServicio {
 
 
     @Override
-    public void crear(CrearCategoriaDTO dto) throws Exception {
+    public void crearCategoria(CrearCategoriaDTO dto) throws Exception {
         // Validar si ya existe una categoría con el mismo nombre (opcional pero recomendable)
         if (categoriaRepositorio.existsByNombreIgnoreCase(dto.nombre())) {
             throw new Exception("Ya existe una categoría con el nombre: " + dto.nombre());
@@ -35,7 +32,12 @@ public class CategoriaServicioImpl implements CategoriaServicio {
     }
 
     @Override
-    public void editar(String id, CrearCategoriaDTO categoriaDTO) throws Exception {
+    public void actualizarCategoria(String id, CategoriaDTO categoria) throws Exception {
+
+    }
+
+    @Override
+    public void editarCategoria(String id, CrearCategoriaDTO categoriaDTO) throws Exception {
         Categoria categoriaExistente = categoriaRepositorio.findById(new ObjectId(id))
                 .orElseThrow(() -> new Exception("La categoría con ID " + id + " no existe"));
         boolean existeOtra = categoriaRepositorio.existsByNombreIgnoreCase(categoriaDTO.nombre())
@@ -49,12 +51,17 @@ public class CategoriaServicioImpl implements CategoriaServicio {
     }
 
     @Override
-    public void eliminar(String id) throws Exception {
+    public void eliminarCategoria(String id) throws Exception {
         ObjectId objectId = new ObjectId(id);
         if (!categoriaRepositorio.existsById(objectId)) {
             throw new Exception("No se encontró una categoría con el ID: " + objectId);
         }
         categoriaRepositorio.deleteById(objectId);
+    }
+
+    @Override
+    public InfocategoriaDTO obtenerCategoria(String id) throws Exception {
+        return null;
     }
 
     @Override
