@@ -28,6 +28,8 @@ repositories {
 
 
 dependencies {
+    implementation("org.simplejavamail:simple-java-mail:8.12.5")
+    implementation("org.simplejavamail:batch-module:8.12.5")
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
