@@ -151,7 +151,7 @@ class ReporteServicioImplTest {
         verify(reporteMapper, never()).EditarReporteDTO(any(), any());
         verify(reporteRepositorio, never()).save(any());
     }
-    
+
     @Test
     void obtenerReporte_Exitoso() {
         // Arrange
@@ -199,6 +199,38 @@ class ReporteServicioImplTest {
         // Verificamos las interacciones
         Mockito.verify(reporteRepositorio).findById(objectId);
         Mockito.verify(reporteMapper).toDTO(reporte);
+    }
+    @Test
+    void obtenerReporte_IdInvalido_LanzaExcepcion() {
+        // Arrange
+        String idInvalido = "1234"; // Esto no es un ObjectId válido
+
+        // Act & Assert
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            reporteServicio.obtener(idInvalido);
+        });
+
+        // Verificamos que no se llamen las dependencias, porque el método debe fallar antes
+        Mockito.verifyNoInteractions(reporteRepositorio);
+        Mockito.verifyNoInteractions(reporteMapper);
+    }
+    @Test
+    void obtenerReporte_NoExiste_LanzaExcepcion() {
+        // Arrange
+        String idValido = new ObjectId().toHexString();
+        ObjectId objectId = new ObjectId(idValido);
+
+        // Simulamos que el repositorio no encuentra el reporte
+        Mockito.when(reporteRepositorio.findById(objectId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
+            reporteServicio.obtener(idValido);
+        });
+
+        // Verificamos que se llamó al repositorio pero no al mapper
+        Mockito.verify(reporteRepositorio).findById(objectId);
+        Mockito.verifyNoInteractions(reporteMapper);
     }
 
 }
