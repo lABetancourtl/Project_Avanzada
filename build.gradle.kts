@@ -28,6 +28,7 @@ repositories {
 
 
 dependencies {
+    implementation("com.cloudinary:cloudinary-http45:1.39.0")
     implementation("org.simplejavamail:simple-java-mail:8.12.5")
     implementation("org.simplejavamail:batch-module:8.12.5")
     implementation("org.springframework.boot:spring-boot-starter-mail")
