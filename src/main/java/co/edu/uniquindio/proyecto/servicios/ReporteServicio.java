@@ -10,7 +10,6 @@ import java.util.List;
 public interface ReporteServicio {
 
     void crearReporte(@Valid CrearReporteDTO reporte) throws Exception;
-    void editarReporte(String id, @Valid EditarReporteDTO reporte) throws Exception;
     void eliminarReporte(String id) throws Exception;
     void actualizarReporte(String id, EditarReporteDTO reporte) throws Exception;
     ReporteDTO obtener(String id) throws Exception;

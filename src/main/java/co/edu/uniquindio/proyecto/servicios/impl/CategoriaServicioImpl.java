@@ -32,11 +32,6 @@ public class CategoriaServicioImpl implements CategoriaServicio {
     }
 
     @Override
-    public void actualizarCategoria(String id, CategoriaDTO categoria) throws Exception {
-
-    }
-
-    @Override
     public void editarCategoria(String id, CrearCategoriaDTO categoriaDTO) throws Exception {
         Categoria categoriaExistente = categoriaRepositorio.findById(new ObjectId(id))
                 .orElseThrow(() -> new Exception("La categoría con ID " + id + " no existe"));
@@ -60,16 +55,16 @@ public class CategoriaServicioImpl implements CategoriaServicio {
     }
 
     @Override
-    public InfocategoriaDTO obtenerCategoria(String id) throws Exception {
-        return null;
-    }
-
-    @Override
     public List<CategoriaDTO> listar() {
         return categoriaRepositorio.findAll()
                 .stream()
                 .map(categoriaMapper::toDTO)
                 .toList();
+    }
+
+    @Override
+    public InfocategoriaDTO obtenerCategoria(String id) throws Exception {
+        return null;
     }
 
 }

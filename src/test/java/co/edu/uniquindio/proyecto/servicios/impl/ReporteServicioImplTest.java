@@ -2,6 +2,7 @@ package co.edu.uniquindio.proyecto.servicios.impl;
 
 import co.edu.uniquindio.proyecto.dto.CrearReporteDTO;
 import co.edu.uniquindio.proyecto.dto.EditarReporteDTO;
+import co.edu.uniquindio.proyecto.dto.ReporteDTO;
 import co.edu.uniquindio.proyecto.dto.UbicacionDTO;
 import co.edu.uniquindio.proyecto.mapper.ReporteMapper;
 import co.edu.uniquindio.proyecto.modelo.documents.Reporte;
@@ -9,12 +10,17 @@ import co.edu.uniquindio.proyecto.modelo.documents.Usuario;
 import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import org.bson.types.ObjectId;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -114,7 +120,7 @@ class ReporteServicioImplTest {
         when(reporteRepositorio.findById(objectId))
                 .thenReturn(Optional.of(reporteExistente));
         // Act
-        reporteServicio.editarReporte(reporteId, editarReporteDTO);
+        reporteServicio.actualizarReporte(reporteId, editarReporteDTO);
         // Assert
         verify(reporteRepositorio).findById(objectId);
         verify(reporteMapper).EditarReporteDTO(editarReporteDTO, reporteExistente);
@@ -138,13 +144,15 @@ class ReporteServicioImplTest {
                 .thenReturn(Optional.empty());
         // Act & Assert
         Exception exception = assertThrows(Exception.class, () ->
-                reporteServicio.editarReporte(reporteId, editarReporteDTO)
+                reporteServicio.actualizarReporte(reporteId, editarReporteDTO)
         );
         assertEquals("El reporte no existe", exception.getMessage());
         // Verificar que no se haya llamado al mapper ni a guardar
         verify(reporteMapper, never()).EditarReporteDTO(any(), any());
         verify(reporteRepositorio, never()).save(any());
     }
+    //Steven aqui v
+
 
 }
 

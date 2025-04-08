@@ -46,16 +46,27 @@ public class ReporteServicioImpl implements ReporteServicio {
         notificarNuevoReporte(reporte);
     }
 
-
     @Override
-    public void editarReporte(String id, EditarReporteDTO dto) throws Exception {
+    public void actualizarReporte(String id, EditarReporteDTO dto) throws Exception {
+        // Validar que el ID tenga un formato correcto
+        if (!ObjectId.isValid(id)) {
+            throw new IllegalArgumentException("El ID proporcionado no es válido: " + id);
+        }
+        ObjectId objectId = new ObjectId(id);
         // Buscar el reporte existente
-        Reporte reporte = reporteRepositorio.findById(new ObjectId(id))
-                .orElseThrow(() -> new Exception("El reporte no existe"));
-        // Actualizar campos editables
-        reporteMapper.EditarReporteDTO(dto, reporte);
-        // Guardamos los cambios
-        reporteRepositorio.save(reporte);
+        Reporte reporteExistente = reporteRepositorio.findById(objectId)
+                .orElseThrow(() -> new NoSuchElementException("No se encontró un reporte con el id: " + id));
+        // Utilizar el mapper para actualizar el documento existente
+        reporteMapper.EditarReporteDTO(dto, reporteExistente);
+        // Guardar los cambios
+        reporteRepositorio.save(reporteExistente);
+        // Notificar por WebSocket
+        NotificacionDTO notificacionDTO = new NotificacionDTO(
+                "Reporte Actualizado",
+                "Se ha actualizado el reporte: " + reporteExistente.getTitulo(),
+                "reports"
+        );
+        webSocketNotificationService.notificarClientes(notificacionDTO);
     }
 
     @Override
@@ -82,34 +93,19 @@ public class ReporteServicioImpl implements ReporteServicio {
         );
         webSocketNotificationService.notificarClientes(notificacionDTO);
     }
-    
+
     @Override
-    public void actualizarReporte(String id, EditarReporteDTO dto) throws Exception {
-        // Validar que el ID tenga un formato correcto
+    public ReporteDTO obtener(String id) {
+        // Validar que el ID tenga formato correcto
         if (!ObjectId.isValid(id)) {
             throw new IllegalArgumentException("El ID proporcionado no es válido: " + id);
         }
         ObjectId objectId = new ObjectId(id);
-        // Buscar el reporte existente
-        Reporte reporteExistente = reporteRepositorio.findById(objectId)
+        // Buscar el reporte por ID
+        Reporte reporte = reporteRepositorio.findById(objectId)
                 .orElseThrow(() -> new NoSuchElementException("No se encontró un reporte con el id: " + id));
-        // Utilizar el mapper para actualizar el documento existente
-        reporteMapper.EditarReporteDTO(dto, reporteExistente);
-        // Guardar los cambios
-        reporteRepositorio.save(reporteExistente);
-        // Notificar por WebSocket
-        NotificacionDTO notificacionDTO = new NotificacionDTO(
-                "Reporte Actualizado",
-                "Se ha actualizado el reporte: " + reporteExistente.getTitulo(),
-                "reports"
-        );
-        webSocketNotificationService.notificarClientes(notificacionDTO);
-    }
-
-
-    @Override
-    public ReporteDTO obtener(String id) {
-        return null;
+        // Convertir el documento a DTO usando el mapper
+        return reporteMapper.toDTO(reporte);
     }
 
     @Override
