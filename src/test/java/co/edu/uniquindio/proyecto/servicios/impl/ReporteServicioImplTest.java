@@ -151,8 +151,55 @@ class ReporteServicioImplTest {
         verify(reporteMapper, never()).EditarReporteDTO(any(), any());
         verify(reporteRepositorio, never()).save(any());
     }
-    //Steven aqui v
+    
+    @Test
+    void obtenerReporte_Exitoso() {
+        // Arrange
+        String id = new ObjectId().toHexString();
+        ObjectId objectId = new ObjectId(id);
 
+        // Mock de reporte retornado por la base de datos
+        Reporte reporte = Mockito.mock(Reporte.class);
+        Mockito.when(reporte.getId()).thenReturn(objectId);
+
+        // Mock de DTO que retorna el mapper
+        ReporteDTO reporteDTO = new ReporteDTO(
+                id,
+                "titulo",
+                "Descripcion del reporte",
+                "ABIERTO",
+                LocalDateTime.now(),
+                true,
+                "644f1b5de3a5b768cbf4f3c9", // clienteId
+                "Juan Pérez",
+                new UbicacionDTO(123.12312, 2131.2312),
+                "644f1b5de3a5b768cbf453c9", // categoriaId
+                "Categoría Prueba",
+                List.of("foto1.jpg", "foto2.jpg")
+        );
+        // Simulamos comportamiento del repositorio
+        Mockito.when(reporteRepositorio.findById(objectId)).thenReturn(Optional.of(reporte));
+        // Simulamos comportamiento del mapper
+        Mockito.when(reporteMapper.toDTO(reporte)).thenReturn(reporteDTO);
+        // Act
+        ReporteDTO resultado = reporteServicio.obtener(id);
+        // Assert
+        Assertions.assertNotNull(resultado);
+        Assertions.assertEquals(id, resultado.id());
+        Assertions.assertEquals("titulo", resultado.titulo());
+        Assertions.assertEquals("Descripcion del reporte", resultado.descripcion());
+        Assertions.assertEquals("ABIERTO", resultado.estado());
+        Assertions.assertTrue(resultado.importante());
+        Assertions.assertEquals("644f1b5de3a5b768cbf4f3c9", resultado.clienteId());
+        Assertions.assertEquals("Juan Pérez", resultado.nombreCliente());
+        Assertions.assertEquals(new UbicacionDTO(123.12312, 2131.2312), resultado.ubicacion());
+        Assertions.assertEquals("644f1b5de3a5b768cbf453c9", resultado.categoriaId());
+        Assertions.assertEquals("Categoría Prueba", resultado.nombreCategoria());
+        Assertions.assertEquals(List.of("foto1.jpg", "foto2.jpg"), resultado.fotos());
+        // Verificamos las interacciones
+        Mockito.verify(reporteRepositorio).findById(objectId);
+        Mockito.verify(reporteMapper).toDTO(reporte);
+    }
 
 }
 
