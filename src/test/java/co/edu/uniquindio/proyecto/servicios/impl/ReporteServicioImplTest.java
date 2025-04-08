@@ -214,6 +214,24 @@ class ReporteServicioImplTest {
         Mockito.verifyNoInteractions(reporteRepositorio);
         Mockito.verifyNoInteractions(reporteMapper);
     }
+    @Test
+    void obtenerReporte_NoExiste_LanzaExcepcion() {
+        // Arrange
+        String idValido = new ObjectId().toHexString();
+        ObjectId objectId = new ObjectId(idValido);
+
+        // Simulamos que el repositorio no encuentra el reporte
+        Mockito.when(reporteRepositorio.findById(objectId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
+            reporteServicio.obtener(idValido);
+        });
+
+        // Verificamos que se llamó al repositorio pero no al mapper
+        Mockito.verify(reporteRepositorio).findById(objectId);
+        Mockito.verifyNoInteractions(reporteMapper);
+    }
 
 }
 
