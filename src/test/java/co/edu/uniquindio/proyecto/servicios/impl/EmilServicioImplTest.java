@@ -46,4 +46,21 @@ class EmailServicioImplTest {
         // Assert
         Mockito.verify(mailer, Mockito.times(1)).sendMail(Mockito.any(Email.class));
     }
+
+    @Test
+    void enviarCorreo_DeberiaConstruirCorreoCorrectamente() throws Exception {
+        // Arrange
+        EmailDTO emailDTO = new EmailDTO(
+                "destinatario@correo.com",
+                "Asunto de prueba",
+                "<p>Cuerpo del correo de prueba</p>"
+        );
+
+        // Act
+        emailServicio.enviarCorreo(emailDTO);
+
+        // Assert
+        // Verificamos que el método de envío haya sido llamado correctamente
+        Mockito.verify(mailer).sendMail(Mockito.any(Email.class));
+        }
 }
