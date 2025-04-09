@@ -7,6 +7,7 @@ import co.edu.uniquindio.proyecto.modelo.documents.Usuario;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoUsuario;
 import co.edu.uniquindio.proyecto.modelo.vo.CodigoValidacion;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
+import co.edu.uniquindio.proyecto.servicios.EmailServicio;
 import co.edu.uniquindio.proyecto.servicios.UsuarioServicio;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -27,7 +28,9 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     private final UsuarioRepositorio usuarioRepositorio;
     private final UsuarioMapper usuarioMapper;
     private final MongoTemplate mongoTemplate;
-    //private final EmailServicio emailServicio;
+    private final EmailServicio emailServicio;
+
+
 
     @Override
     public void crear(CrearUsuarioDTO crearUsuarioDTO) throws Exception {
@@ -41,7 +44,25 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                 LocalDateTime.now()
         ));
         usuarioRepositorio.save(usuario);
-        System.out.println();
+        String asunto = "Verificación de cuenta";
+        String destinatario = usuario.getEmail(); // Primero declaras el destinatario
+
+        String cuerpo = """
+        <html>
+            <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+                <div style="max-width: 600px; margin: auto; background-color: white; padding: 20px; border-radius: 8px;">
+                    <h2 style="color: #4CAF50; text-align: center;">Verificación de cuenta</h2>
+                    <p>¡Hola <strong>%s</strong>!</p>
+                    <p>Tu código de verificación es:</p>
+                    <h1 style="background-color: #eee; padding: 10px; border-radius: 4px; text-align: center;">%s</h1>
+                    <p>Si no solicitaste este código, por favor ignora este correo.</p>
+                    <p style="font-size: 12px; color: #888;">Este es un correo automático, por favor no respondas.</p>
+                </div>
+            </body>
+        </html>
+        """.formatted(usuario.getNombre(), codigoActivacion);
+        emailServicio.enviarCorreo(new EmailDTO(asunto, cuerpo, destinatario));
+
     }
 
     @Override
@@ -129,6 +150,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         return codigo.toString();
     }
 
+    //Envia el codigo para cambiar password
     @Override
     public void enviarCodigoVerificacion(EnviarCodigoDTO enviarCodigoDTO) throws Exception {
        Usuario usuario = obtenerPorEmail(enviarCodigoDTO.email());
@@ -138,6 +160,10 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                LocalDateTime.now()
        ));
        usuarioRepositorio.save(usuario);
+        String asunto = "Restablecer Password";
+        String cuerpo = "¡Hola " + usuario.getNombre() + "! Tu código para cambiar password es: " + codigo;
+        String destinatario = usuario.getEmail();
+        emailServicio.enviarCorreo(new EmailDTO(asunto, cuerpo, destinatario));
     }
 
     @Override
