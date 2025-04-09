@@ -27,11 +27,32 @@ public class ComentarioServicioImpl implements ComentarioServicio {
 
     private final ComentarioMapper comentarioMapper;
 
-    //aquui
     @Override
     public void crearComentario(String idReporte, CrearComentarioDTO crearComentarioDTO) throws Exception {
-
+        // Validar que el ID tenga formato correcto
+        if (!ObjectId.isValid(idReporte)) {
+            throw new IllegalArgumentException("El ID del reporte no es válido: " + idReporte);
+        }
+        ObjectId objectId = new ObjectId(idReporte);
+        // Buscar el reporte
+        Reporte reporte = reporteRepositorio.findById(objectId)
+                .orElseThrow(() -> new NoSuchElementException("No se encontró un reporte con el id: " + idReporte));
+        // Mapear CrearComentarioDTO a Comentario utilizando el mapper
+        Comentario comentario = comentarioMapper.toDocument(crearComentarioDTO);
+        // Generar un nuevo ID y establecer fecha actual
+        comentario.setId(new ObjectId());
+        comentario.setFecha(LocalDateTime.now());
+        comentario.setReporteId(objectId);
+        // Inicializar la lista de comentarios si está vacía
+        if (reporte.getComentarios() == null) {
+            reporte.setComentarios(new ArrayList<>());
+        }
+        // Agregar el comentario a la lista
+        reporte.getComentarios().add(comentario);
+        // Guardar el reporte actualizado
+        reporteRepositorio.save(reporte);
     }
+    
     //Aqui
     @Override
     public List<ComentarioDTO> obtenerComentarios(String idReporte) throws Exception {
