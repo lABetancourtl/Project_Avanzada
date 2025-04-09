@@ -11,8 +11,9 @@ public record CrearComentarioDTO (
         String mensaje,
 
         @NotBlank(message = "El ID del cliente es obligatorio")
-        String clienteId,
+        String clienteId
 
-        @NotBlank(message = "El ID del reporte es obligatorio")
-        String reporteId
+        //Va o no va ?
+//        @NotBlank(message = "El ID del reporte es obligatorio")
+//        String reporteId
 ){}
