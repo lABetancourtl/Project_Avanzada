@@ -52,11 +52,21 @@ public class ComentarioServicioImpl implements ComentarioServicio {
         // Guardar el reporte actualizado
         reporteRepositorio.save(reporte);
     }
-    
-    //Aqui
+
     @Override
     public List<ComentarioDTO> obtenerComentarios(String idReporte) throws Exception {
-        return null;
-    }
+        if (!ObjectId.isValid(idReporte)) {
+            throw new IllegalArgumentException("El ID del reporte no es válido: " + idReporte);
+        }
+        ObjectId objectId = new ObjectId(idReporte);
+        Reporte reporte = reporteRepositorio.findById(objectId)
+                .orElseThrow(() -> new NoSuchElementException("No se encontró un reporte con el id: " + idReporte));
 
+        if (reporte.getComentarios() == null || reporte.getComentarios().isEmpty()) {
+            return List.of();
+        }
+        return reporte.getComentarios().stream()
+                .map(comentarioMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 }
