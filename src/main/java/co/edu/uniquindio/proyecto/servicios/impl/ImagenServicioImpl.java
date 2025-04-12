@@ -3,6 +3,7 @@ package co.edu.uniquindio.proyecto.servicios.impl;
 import co.edu.uniquindio.proyecto.servicios.ImagenServicio;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
@@ -15,21 +16,32 @@ import java.util.Map;
 public class ImagenServicioImpl implements ImagenServicio {
 
     private final Cloudinary cloudinary;
-
-    public ImagenServicioImpl(){
+    public ImagenServicioImpl(
+            @Value("${cloudinary.cloud_name}") String cloudName,
+            @Value("${cloudinary.api_key}") String apiKey,
+            @Value("${cloudinary.api_secret}") String apiSecret
+    ){
         Map<String, String> config = new HashMap<>();
-        config.put("cloud_name", "SU_CLOUD_NAME");
-        config.put("api_key", "SU_API_KEY");
-        config.put("api_secret", "SU_API_SECRET");
+        config.put("cloud_name", cloudName);
+        config.put("api_key", apiKey);
+        config.put("api_secret", apiSecret);
 
         cloudinary = new Cloudinary(config);
     }
 
     @Override
     public Map subirImagen(MultipartFile imagen) throws Exception {
-        File file = convertir(imagen);
-        return cloudinary.uploader().upload(file, ObjectUtils.asMap("folder", "reportes"));
+        File file = null;
+        try {
+            file = convertir(imagen);
+            return cloudinary.uploader().upload(file, ObjectUtils.asMap("folder", "reportes"));
+        } finally {
+            if (file != null && file.exists()) {
+                file.delete(); // Eliminar archivo temporal después de usarlo
+            }
+        }
     }
+
 
     @Override
     public Map eliminarImagen(String idImagen) throws Exception {

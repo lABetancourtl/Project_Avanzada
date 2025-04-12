@@ -4,6 +4,7 @@ import co.edu.uniquindio.proyecto.dto.*;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoReporte;
 import co.edu.uniquindio.proyecto.modelo.vo.Ubicacion;
 import jakarta.validation.Valid;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,5 +21,7 @@ public interface ReporteServicio {
     List<InfoReporteDTO> obtenerReportesUsuario(String idusuario, int pagina) throws Exception;
     List<InfoReporteDTO> obtenerReportes(Ubicacion ubicacion) throws Exception;
     List<HistorialEstadoDTO> listarHistorialEstados(String id) throws Exception;
+
+    //void crearReporte(CrearReporteDTO reporte, MultipartFile imagen) throws Exception;
 }
 

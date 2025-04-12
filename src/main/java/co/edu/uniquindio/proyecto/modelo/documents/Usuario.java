@@ -7,6 +7,7 @@ import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.web.multipart.MultipartFile;
 
 @Document("usuarios")
 @Getter
@@ -29,11 +30,13 @@ public class Usuario {
     private String password;
     private CodigoValidacion codigoValidacion; // ← embebida
     private String fechaRegistro;
+    private String fotoPerfil;
 
 
     // También puedes eliminar este constructor si usas @Builder y no necesitas lógica extra
     @Builder
-    public Usuario(String nombre, String email, String telefono, String ciudad, Rol rol, EstadoUsuario estado, String password, CodigoValidacion codigoValidacion, String fechaRegistro) {
+    public Usuario(String nombre, String email, String telefono, String ciudad, Rol rol,
+                   EstadoUsuario estado, String password, CodigoValidacion codigoValidacion, String fechaRegistro, String fotoPerfil) {
         this.nombre = nombre;
         this.email = email;
         this.telefono = telefono;
@@ -43,5 +46,6 @@ public class Usuario {
         this.password = password;
         this.codigoValidacion = codigoValidacion;
         this.fechaRegistro = fechaRegistro;
+        this.fotoPerfil = fotoPerfil;
     }
 }

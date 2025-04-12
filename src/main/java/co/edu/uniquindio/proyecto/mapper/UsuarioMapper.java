@@ -6,6 +6,7 @@ import co.edu.uniquindio.proyecto.dto.UsuarioDTO;
 import co.edu.uniquindio.proyecto.modelo.documents.Usuario;
 import org.bson.types.ObjectId;
 import org.mapstruct.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Mapper(componentModel = "spring")
 public interface UsuarioMapper {
@@ -22,7 +23,6 @@ public interface UsuarioMapper {
         return value != null ? value.toHexString() : null;
     }
 
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "estado", ignore = true)
     @Mapping(target = "rol", ignore = true)
@@ -31,6 +31,4 @@ public interface UsuarioMapper {
     @Mapping(target = "email", ignore = true)
     @Mapping(target = "password", ignore = true)
     void editarUsuarioDTO(EditarUsuarioDTO dto, @MappingTarget Usuario usuario);
-
 }
-

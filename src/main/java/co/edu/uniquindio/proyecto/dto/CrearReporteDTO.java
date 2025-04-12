@@ -26,5 +26,6 @@ public record CrearReporteDTO(
 
         boolean importante,
 
-        List<String> fotos
+        //List<String> fotos
+        String foto
 ){}
