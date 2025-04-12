@@ -69,4 +69,26 @@ public class ComentarioServicioImpl implements ComentarioServicio {
                 .map(comentarioMapper::toDTO)
                 .collect(Collectors.toList());
     }
+    @Override
+    public void editarComentario(String idReporte, String idComentario, String nuevoMensaje) throws Exception {
+        // Validar los IDs
+        if (!ObjectId.isValid(idReporte) || !ObjectId.isValid(idComentario)) {
+            throw new IllegalArgumentException("El ID del reporte o del comentario no es válido");
+        }
+        ObjectId reporteObjectId = new ObjectId(idReporte);
+        ObjectId comentarioObjectId = new ObjectId(idComentario);
+        // Buscar el reporte
+        Reporte reporte = reporteRepositorio.findById(reporteObjectId)
+                .orElseThrow(() -> new NoSuchElementException("No se encontró un reporte con el id: " + idReporte));
+        // Buscar el comentario dentro del reporte
+        Comentario comentario = reporte.getComentarios().stream()
+                .filter(c -> c.getId().equals(comentarioObjectId))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("No se encontró un comentario con el id: " + idComentario));
+        // Actualizar el mensaje del comentario
+        comentario.setMensaje(nuevoMensaje);
+        // Guardar el reporte actualizado
+        reporteRepositorio.save(reporte);
+    }
+
 }
