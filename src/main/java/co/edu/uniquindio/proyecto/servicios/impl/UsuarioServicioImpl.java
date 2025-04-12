@@ -8,6 +8,7 @@ import co.edu.uniquindio.proyecto.modelo.enums.EstadoUsuario;
 import co.edu.uniquindio.proyecto.modelo.vo.CodigoValidacion;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.servicios.EmailServicio;
+import co.edu.uniquindio.proyecto.servicios.ImagenServicio;
 import co.edu.uniquindio.proyecto.servicios.UsuarioServicio;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -29,6 +31,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     private final UsuarioMapper usuarioMapper;
     private final MongoTemplate mongoTemplate;
     private final EmailServicio emailServicio;
+    private final ImagenServicio imagenServicio;
 
 
 
@@ -68,7 +71,10 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     @Override
     public void editar(String id,EditarUsuarioDTO editarUsuarioDTO) throws Exception {
         Usuario usuario = obtenerUsuarioPorId(id);
+
+
         usuarioMapper.editarUsuarioDTO(editarUsuarioDTO, usuario);
+
         usuarioRepositorio.save(usuario);
     }
 

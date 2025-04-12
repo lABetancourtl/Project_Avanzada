@@ -27,7 +27,8 @@ public class Reporte {
     private ObjectId categoriaId;
     private String descripcion;
     private Ubicacion ubicacion;
-    private List<String> fotos;
+    //private List<String> fotos;
+    private String foto;
     private ObjectId clienteId; // Referencia al usuario que creó el reporte
     private LocalDateTime fecha;
     private List<HistorialReporte> historial;
@@ -36,12 +37,12 @@ public class Reporte {
 
 
     @Builder
-    public Reporte(String titulo, ObjectId categoriaid, String descripcion, Ubicacion ubicacion, List<String> fotos, ObjectId clienteId, LocalDateTime fecha, List<HistorialReporte> historial, EstadoReporte estadoActual, int contadorImportante) {
+    public Reporte(String titulo, ObjectId categoriaid, String descripcion, Ubicacion ubicacion, String foto, ObjectId clienteId, LocalDateTime fecha, List<HistorialReporte> historial, EstadoReporte estadoActual, int contadorImportante) {
         this.titulo = titulo;
         this.categoriaId = categoriaid;
         this.descripcion = descripcion;
         this.ubicacion = ubicacion;
-        this.fotos = fotos;
+        this.foto = foto;
         this.clienteId = clienteId;
         this.fecha = fecha;
         this.historial = historial;

@@ -9,11 +9,13 @@ import co.edu.uniquindio.proyecto.modelo.enums.EstadoUsuario;
 import co.edu.uniquindio.proyecto.modelo.vo.Ubicacion;
 import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
+import co.edu.uniquindio.proyecto.servicios.ImagenServicio;
 import co.edu.uniquindio.proyecto.servicios.ReporteServicio;
 import co.edu.uniquindio.proyecto.mapper.ReporteMapper;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +31,7 @@ public class ReporteServicioImpl implements ReporteServicio {
     private final UsuarioRepositorio usuarioRepositorio;
     private final ReporteMapper reporteMapper;
     private final WebSocketNotificationService webSocketNotificationService;
+    private final ImagenServicioImpl imagenServicio;
 
     @Override
     public void crearReporte(CrearReporteDTO dto) {
@@ -42,6 +45,25 @@ public class ReporteServicioImpl implements ReporteServicio {
         // Enviar notificación por WebSocket
         notificarNuevoReporte(reporte);
     }
+//    @Override
+//    public void crearReporte(CrearReporteDTO dto, MultipartFile imagen) throws Exception {
+//        // Buscar usuario
+//        Usuario usuario = obtenerUsuarioActivo(dto.clienteId());
+//        // Crear el documento Reporte
+//        Reporte reporte = reporteMapper.toDocument(dto);
+//        asignarDatosAdicionales(reporte);
+//        // Guardar la imagen si es necesario
+//        if (imagen != null && !imagen.isEmpty()) {
+//            String urlImagen = imagenServicio.subirImagen(imagen).toString(); // Por ejemplo, usando Cloudinary, S3, etc.
+//            reporte.setFoto(urlImagen); // Suponiendo que tu modelo Reporte tiene un campo para esto
+//        }
+//        // Guardar el reporte
+//        reporteRepositorio.save(reporte);
+//
+//        // Notificar por WebSocket
+//        notificarNuevoReporte(reporte);
+//    }
+
 
     @Override
     public void actualizarReporte(String id, EditarReporteDTO dto) throws Exception {

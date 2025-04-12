@@ -4,8 +4,10 @@ import co.edu.uniquindio.proyecto.dto.*;
 import co.edu.uniquindio.proyecto.servicios.ReporteServicio;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +22,17 @@ public class ReporteControlador {
         reporteServicio.crearReporte(reporte);
         return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte creado exitosamente"));
     }
+
+//    @PostMapping(value = "/reporte", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ResponseEntity<MensajeDTO<String>> crear(
+//            @RequestPart(value = "reporte", required = true) @Valid CrearReporteDTO reporte,
+//            @RequestPart(value = "imagen", required = false) MultipartFile imagen
+//    ) throws Exception {
+//        reporteServicio.crearReporte(reporte, imagen);
+//        return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte creado exitosamente"));
+//    }
+
+
 
     // Editar un reporte existente
     @PutMapping("/{id}")
