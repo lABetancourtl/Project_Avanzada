@@ -6,6 +6,7 @@ import co.edu.uniquindio.proyecto.mapper.ComentarioMapper;
 import co.edu.uniquindio.proyecto.modelo.documents.Comentario;
 import co.edu.uniquindio.proyecto.modelo.documents.Reporte;
 import co.edu.uniquindio.proyecto.modelo.documents.Usuario;
+import co.edu.uniquindio.proyecto.repositorios.ComentarioRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.servicios.ComentarioServicio;
@@ -27,48 +28,28 @@ public class ComentarioServicioImpl implements ComentarioServicio {
 
     private final ComentarioMapper comentarioMapper;
 
+    private final ComentarioRepositorio comentarioRepositorio;
+
     @Override
     public void crearComentario(String idReporte, CrearComentarioDTO crearComentarioDTO) throws Exception {
-        // Validar que el ID tenga formato correcto
+        // Validar que el ID del reporte tenga formato correcto
         if (!ObjectId.isValid(idReporte)) {
             throw new IllegalArgumentException("El ID del reporte no es válido: " + idReporte);
         }
         ObjectId objectId = new ObjectId(idReporte);
-        // Buscar el reporte
-        Reporte reporte = reporteRepositorio.findById(objectId)
+        // Verificar que el reporte exista
+        reporteRepositorio.findById(objectId)
                 .orElseThrow(() -> new NoSuchElementException("No se encontró un reporte con el id: " + idReporte));
         // Mapear CrearComentarioDTO a Comentario utilizando el mapper
         Comentario comentario = comentarioMapper.toDocument(crearComentarioDTO);
-        // Generar un nuevo ID y establecer fecha actual
+        // Generar un nuevo ID, establecer fecha actual y asignar el reporteId
         comentario.setId(new ObjectId());
         comentario.setFecha(LocalDateTime.now());
         comentario.setReporteId(objectId);
-        // Inicializar la lista de comentarios si está vacía
-        if (reporte.getComentarios() == null) {
-            reporte.setComentarios(new ArrayList<>());
-        }
-        // Agregar el comentario a la lista
-        reporte.getComentarios().add(comentario);
-        // Guardar el reporte actualizado
-        reporteRepositorio.save(reporte);
+        // Guardar el comentario directamente en la colección de comentarios
+        comentarioRepositorio.save(comentario);
     }
 
-    @Override
-    public List<ComentarioDTO> obtenerComentarios(String idReporte) throws Exception {
-        if (!ObjectId.isValid(idReporte)) {
-            throw new IllegalArgumentException("El ID del reporte no es válido: " + idReporte);
-        }
-        ObjectId objectId = new ObjectId(idReporte);
-        Reporte reporte = reporteRepositorio.findById(objectId)
-                .orElseThrow(() -> new NoSuchElementException("No se encontró un reporte con el id: " + idReporte));
-
-        if (reporte.getComentarios() == null || reporte.getComentarios().isEmpty()) {
-            return List.of();
-        }
-        return reporte.getComentarios().stream()
-                .map(comentarioMapper::toDTO)
-                .collect(Collectors.toList());
-    }
     @Override
     public void editarComentario(String idReporte, String idComentario, String nuevoMensaje) throws Exception {
         // Validar los IDs
@@ -77,18 +58,38 @@ public class ComentarioServicioImpl implements ComentarioServicio {
         }
         ObjectId reporteObjectId = new ObjectId(idReporte);
         ObjectId comentarioObjectId = new ObjectId(idComentario);
-        // Buscar el reporte
-        Reporte reporte = reporteRepositorio.findById(reporteObjectId)
+        // Verificar que el reporte exista
+        reporteRepositorio.findById(reporteObjectId)
                 .orElseThrow(() -> new NoSuchElementException("No se encontró un reporte con el id: " + idReporte));
-        // Buscar el comentario dentro del reporte
-        Comentario comentario = reporte.getComentarios().stream()
-                .filter(c -> c.getId().equals(comentarioObjectId))
-                .findFirst()
+        // Buscar el comentario por ID
+        Comentario comentario = comentarioRepositorio.findById(comentarioObjectId)
                 .orElseThrow(() -> new NoSuchElementException("No se encontró un comentario con el id: " + idComentario));
+        // Verificar que el comentario pertenezca al reporte correcto
+        if (!comentario.getReporteId().equals(reporteObjectId)) {
+            throw new IllegalArgumentException("El comentario no pertenece al reporte indicado");
+        }
         // Actualizar el mensaje del comentario
         comentario.setMensaje(nuevoMensaje);
-        // Guardar el reporte actualizado
-        reporteRepositorio.save(reporte);
+        // Guardar el comentario actualizado en la base de datos
+        comentarioRepositorio.save(comentario);
+    }
+
+    @Override
+    public List<ComentarioDTO> obtenerComentarios(String idReporte) throws Exception {
+        // Validar que el ID del reporte tenga formato correcto
+        if (!ObjectId.isValid(idReporte)) {
+            throw new IllegalArgumentException("El ID del reporte no es válido: " + idReporte);
+        }
+        ObjectId objectId = new ObjectId(idReporte);
+        // Verificar que el reporte exista
+        reporteRepositorio.findById(objectId)
+                .orElseThrow(() -> new NoSuchElementException("No se encontró un reporte con el id: " + idReporte));
+        // Consultar los comentarios directamente en la colección de comentarios
+        List<Comentario> comentarios = comentarioRepositorio.findByReporteId(objectId);
+        // Mapear los comentarios a DTO y devolverlos
+        return comentarios.stream()
+                .map(comentarioMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
 }

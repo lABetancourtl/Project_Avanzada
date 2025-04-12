@@ -33,12 +33,10 @@ public class Reporte {
     private List<HistorialReporte> historial;
     private EstadoReporte estadoActual;
     private int contadorImportante;
-    //Esto va ? pregunta para el profesor
-    private List<Comentario> comentarios;
 
 
     @Builder
-    public Reporte(String titulo, ObjectId categoriaid, String descripcion, Ubicacion ubicacion, List<String> fotos, ObjectId clienteId, LocalDateTime fecha, List<HistorialReporte> historial, EstadoReporte estadoActual, int contadorImportante, List<Comentario> comentarios) {
+    public Reporte(String titulo, ObjectId categoriaid, String descripcion, Ubicacion ubicacion, List<String> fotos, ObjectId clienteId, LocalDateTime fecha, List<HistorialReporte> historial, EstadoReporte estadoActual, int contadorImportante) {
         this.titulo = titulo;
         this.categoriaId = categoriaid;
         this.descripcion = descripcion;
@@ -49,6 +47,5 @@ public class Reporte {
         this.historial = historial;
         this.estadoActual = estadoActual;
         this.contadorImportante = contadorImportante;
-        this.comentarios = comentarios;
     }
 }
