@@ -16,17 +16,12 @@ public class ComentarioControlador {
     private final ComentarioServicio comentarioServicio;
 
     @PostMapping("/{idReporte}")
-    public void crearComentario(
-            @PathVariable String idReporte,
-            @RequestBody CrearComentarioDTO comentarioDTO
-    ) throws Exception {
+    public void crearComentario(@PathVariable String idReporte, @RequestBody CrearComentarioDTO comentarioDTO) throws Exception {
         comentarioServicio.crearComentario(idReporte, comentarioDTO);
     }
 
     @GetMapping("/{idReporte}")
-    public List<ComentarioDTO> obtenerComentarios(
-            @PathVariable String idReporte
-    ) throws Exception {
+    public List<ComentarioDTO> obtenerComentarios(@PathVariable String idReporte) throws Exception {
         return comentarioServicio.obtenerComentarios(idReporte);
     }
 }
