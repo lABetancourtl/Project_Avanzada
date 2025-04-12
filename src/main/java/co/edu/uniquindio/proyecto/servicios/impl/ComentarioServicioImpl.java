@@ -12,6 +12,8 @@ import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.servicios.ComentarioServicio;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -52,7 +54,7 @@ public class ComentarioServicioImpl implements ComentarioServicio {
 
     @Override
     public void editarComentario(String idReporte, String idComentario, String nuevoMensaje) throws Exception {
-        // Validar los IDs
+        // Validar IDs
         if (!ObjectId.isValid(idReporte) || !ObjectId.isValid(idComentario)) {
             throw new IllegalArgumentException("El ID del reporte o del comentario no es válido");
         }
@@ -68,9 +70,16 @@ public class ComentarioServicioImpl implements ComentarioServicio {
         if (!comentario.getReporteId().equals(reporteObjectId)) {
             throw new IllegalArgumentException("El comentario no pertenece al reporte indicado");
         }
-        // Actualizar el mensaje del comentario
+        // Obtener usuario autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String usuarioAutenticadoId = authentication.getName();
+        // Validar que el usuario autenticado sea el creador del comentario
+        if (!comentario.getUsuarioId().toHexString().equals(usuarioAutenticadoId)) {
+            throw new IllegalAccessException("No tienes permiso para editar este comentario");
+        }
+        // Actualizar mensaje
         comentario.setMensaje(nuevoMensaje);
-        // Guardar el comentario actualizado en la base de datos
+        // Guardar cambios
         comentarioRepositorio.save(comentario);
     }
 

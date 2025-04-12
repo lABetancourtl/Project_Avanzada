@@ -34,14 +34,11 @@ public class ReporteServicioImpl implements ReporteServicio {
     public void crearReporte(CrearReporteDTO dto) {
         // Buscar usuario o lanzar excepción personalizada
         Usuario usuario = obtenerUsuarioActivo(dto.clienteId());
-
         // Crear el documento Reporte a partir del DTO
         Reporte reporte = reporteMapper.toDocument(dto);
         asignarDatosAdicionales(reporte);
-
         // Guardar el reporte en la base de datos
         reporteRepositorio.save(reporte);
-
         // Enviar notificación por WebSocket
         notificarNuevoReporte(reporte);
     }
@@ -112,10 +109,10 @@ public class ReporteServicioImpl implements ReporteServicio {
     public void marcarImportante(String id) {
 
     }
-
+    //Pilas falta esto
     @Override
     public void cambiarEstadoReporte(String id, CambiarEstadoDTO cambiarEstadoDTO) {
-
+    //Lo mismo con comentartio que notifique via email
     }
 
     @Override
