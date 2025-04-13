@@ -2,6 +2,7 @@ package co.edu.uniquindio.proyecto.servicios.impl;
 
 import co.edu.uniquindio.proyecto.dto.ComentarioDTO;
 import co.edu.uniquindio.proyecto.dto.CrearComentarioDTO;
+import co.edu.uniquindio.proyecto.dto.EmailDTO;
 import co.edu.uniquindio.proyecto.mapper.ComentarioMapper;
 import co.edu.uniquindio.proyecto.modelo.documents.Comentario;
 import co.edu.uniquindio.proyecto.modelo.documents.Reporte;
@@ -10,6 +11,8 @@ import co.edu.uniquindio.proyecto.repositorios.ComentarioRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.servicios.ComentarioServicio;
+import co.edu.uniquindio.proyecto.servicios.EmailServicio;
+import co.edu.uniquindio.proyecto.util.EmailTemplateUtil;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.security.core.Authentication;
@@ -26,11 +29,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ComentarioServicioImpl implements ComentarioServicio {
 
+    private final UsuarioRepositorio usuarioRepositorio;
+
     private final ReporteRepositorio reporteRepositorio;
 
     private final ComentarioMapper comentarioMapper;
 
     private final ComentarioRepositorio comentarioRepositorio;
+
+    private final EmailServicio emailServicio;
 
     @Override
     public void crearComentario(String idReporte, CrearComentarioDTO crearComentarioDTO) throws Exception {
@@ -39,8 +46,8 @@ public class ComentarioServicioImpl implements ComentarioServicio {
             throw new IllegalArgumentException("El ID del reporte no es válido: " + idReporte);
         }
         ObjectId objectId = new ObjectId(idReporte);
-        // Verificar que el reporte exista
-        reporteRepositorio.findById(objectId)
+        // Verificar que el reporte exista y obtenerlo
+        Reporte reporte = reporteRepositorio.findById(objectId)
                 .orElseThrow(() -> new NoSuchElementException("No se encontró un reporte con el id: " + idReporte));
         // Mapear CrearComentarioDTO a Comentario utilizando el mapper
         Comentario comentario = comentarioMapper.toDocument(crearComentarioDTO);
@@ -50,7 +57,20 @@ public class ComentarioServicioImpl implements ComentarioServicio {
         comentario.setReporteId(objectId);
         // Guardar el comentario directamente en la colección de comentarios
         comentarioRepositorio.save(comentario);
+        // --------------------------
+        // Notificación por correo al creador del reporte
+        Usuario usuario = usuarioRepositorio.findById(reporte.getClienteId())
+                .orElseThrow(() -> new Exception("Usuario creador del reporte no encontrado"));
+        String asunto = "Nuevo comentario en tu reporte";
+        String destinatario = usuario.getEmail();
+        String cuerpo = EmailTemplateUtil.generarTemplateNuevoComentario(
+                usuario.getNombre(),
+                reporte.getTitulo(),
+                crearComentarioDTO.mensaje()
+        );
+        emailServicio.enviarCorreo(new EmailDTO(asunto, cuerpo, destinatario));
     }
+
 
     @Override
     public void editarComentario(String idReporte, String idComentario, String nuevoMensaje) throws Exception {

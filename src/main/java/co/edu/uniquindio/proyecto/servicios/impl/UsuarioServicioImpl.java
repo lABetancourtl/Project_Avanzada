@@ -65,7 +65,6 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         </html>
         """.formatted(usuario.getNombre(), codigoActivacion);
         emailServicio.enviarCorreo(new EmailDTO(asunto, cuerpo, destinatario));
-
     }
 
     @Override
