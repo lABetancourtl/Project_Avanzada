@@ -38,6 +38,22 @@ public class EmailTemplateUtil {
             </html>
             """.formatted(nombreUsuario, tituloReporte, mensajeComentario);
     }
-
-    // Aquí podrías agregar más plantillas de correo reutilizables
+    public static String generarTemplateCambioEstado(String nombreUsuario, String tituloReporte, String nuevoEstado) {
+        return """
+        <html>
+            <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+                <div style="max-width: 600px; margin: auto; background-color: white; padding: 20px; border-radius: 8px;">
+                    <h2 style="color: #4CAF50; text-align: center;">Estado de tu reporte actualizado</h2>
+                    <p>¡Hola <strong>%s</strong>!</p>
+                    <p>Queremos informarte que el estado de tu reporte titulado:</p>
+                    <h3 style="text-align: center; color: #333;">"%s"</h3>
+                    <p>Ha sido actualizado al siguiente estado:</p>
+                    <h1 style="background-color: #eee; padding: 10px; border-radius: 4px; text-align: center;">%s</h1>
+                    <p>Puedes ingresar a la plataforma para consultar los detalles.</p>
+                    <p style="font-size: 12px; color: #888;">Este es un correo automático, por favor no respondas.</p>
+                </div>
+            </body>
+        </html>
+        """.formatted(nombreUsuario, tituloReporte, nuevoEstado);
+    }
 }
