@@ -6,12 +6,15 @@ import co.edu.uniquindio.proyecto.modelo.documents.Reporte;
 import co.edu.uniquindio.proyecto.modelo.documents.Usuario;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoReporte;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoUsuario;
+import co.edu.uniquindio.proyecto.modelo.vo.HistorialReporte;
 import co.edu.uniquindio.proyecto.modelo.vo.Ubicacion;
 import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
+import co.edu.uniquindio.proyecto.servicios.EmailServicio;
 import co.edu.uniquindio.proyecto.servicios.ImagenServicio;
 import co.edu.uniquindio.proyecto.servicios.ReporteServicio;
 import co.edu.uniquindio.proyecto.mapper.ReporteMapper;
+import co.edu.uniquindio.proyecto.util.EmailTemplateUtil;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,8 @@ public class ReporteServicioImpl implements ReporteServicio {
     private final ReporteMapper reporteMapper;
     private final WebSocketNotificationService webSocketNotificationService;
     private final ImagenServicioImpl imagenServicio;
+    private final EmailServicio emailServicio;
+
 
     @Override
     public void crearReporte(CrearReporteDTO dto) {
@@ -45,25 +50,6 @@ public class ReporteServicioImpl implements ReporteServicio {
         // Enviar notificación por WebSocket
         notificarNuevoReporte(reporte);
     }
-//    @Override
-//    public void crearReporte(CrearReporteDTO dto, MultipartFile imagen) throws Exception {
-//        // Buscar usuario
-//        Usuario usuario = obtenerUsuarioActivo(dto.clienteId());
-//        // Crear el documento Reporte
-//        Reporte reporte = reporteMapper.toDocument(dto);
-//        asignarDatosAdicionales(reporte);
-//        // Guardar la imagen si es necesario
-//        if (imagen != null && !imagen.isEmpty()) {
-//            String urlImagen = imagenServicio.subirImagen(imagen).toString(); // Por ejemplo, usando Cloudinary, S3, etc.
-//            reporte.setFoto(urlImagen); // Suponiendo que tu modelo Reporte tiene un campo para esto
-//        }
-//        // Guardar el reporte
-//        reporteRepositorio.save(reporte);
-//
-//        // Notificar por WebSocket
-//        notificarNuevoReporte(reporte);
-//    }
-
 
     @Override
     public void actualizarReporte(String id, EditarReporteDTO dto) throws Exception {
@@ -131,12 +117,40 @@ public class ReporteServicioImpl implements ReporteServicio {
     public void marcarImportante(String id) {
 
     }
-    //Pilas falta esto
-    @Override
-    public void cambiarEstadoReporte(String id, CambiarEstadoDTO cambiarEstadoDTO) {
-    //Lo mismo con comentartio que notifique via email
-    }
 
+    @Override
+    public void cambiarEstadoReporte(String idReporte, CambiarEstadoDTO cambiarEstadoDTO) throws Exception {
+        // Validar el ID del reporte
+        if (!ObjectId.isValid(idReporte)) {
+            throw new IllegalArgumentException("El ID del reporte no es válido: " + idReporte);
+        }
+        ObjectId objectId = new ObjectId(idReporte);
+        // Buscar el reporte
+        Reporte reporte = reporteRepositorio.findById(objectId)
+                .orElseThrow(() -> new NoSuchElementException("No se encontró un reporte con el id: " + idReporte));
+        // Actualizar el estado del reporte
+        EstadoReporte nuevoEstado = EstadoReporte.valueOf(cambiarEstadoDTO.nuevoEstado());
+        reporte.setEstadoActual(nuevoEstado);
+        // Opcional: también puedes agregar al historial del reporte
+        List<HistorialReporte> historial = reporte.getHistorial();
+        historial.add(HistorialReporte.builder()
+                .estado(nuevoEstado)
+                .observacion("Cambio de estado del reporte a: " + nuevoEstado.name())
+                .fecha(LocalDateTime.now())
+                .clienteId(reporte.getClienteId()) // si es ObjectId usuario;
+                .build());
+        reporte.setHistorial(historial);
+        // Guardar los cambios
+        reporteRepositorio.save(reporte);
+        // 📨 Notificar por correo al creador del reporte
+        Usuario usuario = usuarioRepositorio.findById(reporte.getClienteId())
+                .orElseThrow(() -> new NoSuchElementException("No se encontró el usuario del reporte"));
+        String asunto = "Actualización del estado de tu reporte";
+        String cuerpo = EmailTemplateUtil.generarTemplateCambioEstado(usuario.getNombre(), reporte.getTitulo(), nuevoEstado.name());
+        String destinatario = usuario.getEmail();
+        emailServicio.enviarCorreo(new EmailDTO(asunto, cuerpo, destinatario));
+    }
+    
     @Override
     public InfoReporteDTO obtenerReporte(String id) throws Exception {
         return null;
