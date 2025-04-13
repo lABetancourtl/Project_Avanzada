@@ -23,24 +23,12 @@ public class ReporteControlador {
         return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte creado exitosamente"));
     }
 
-//    @PostMapping(value = "/reporte", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<MensajeDTO<String>> crear(
-//            @RequestPart(value = "reporte", required = true) @Valid CrearReporteDTO reporte,
-//            @RequestPart(value = "imagen", required = false) MultipartFile imagen
-//    ) throws Exception {
-//        reporteServicio.crearReporte(reporte, imagen);
-//        return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte creado exitosamente"));
-//    }
-
-
-
     // Editar un reporte existente
     @PutMapping("/{id}")
     public ResponseEntity<MensajeDTO<String>> editar(@PathVariable String id, @Valid @RequestBody EditarReporteDTO dto) throws Exception {
         reporteServicio.actualizarReporte(id, dto);
         return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte editado correctamente"));
     }
-    
 
     // Eliminar un reporte
     @DeleteMapping("/{id}")
@@ -56,18 +44,6 @@ public class ReporteControlador {
         return ResponseEntity.ok(reporte);
     }
 
-//    // Listar reportes con filtros opcionales
-//    @GetMapping
-//    public ResponseEntity<List<ReporteDTO>> listar(
-//            @RequestParam(required = false) String titulo,
-//            @RequestParam(required = false) String categoria,
-//            @RequestParam(required = false) String estado,
-//            @RequestParam(defaultValue = "0") int pagina
-//    ) {
-//        List<ReporteDTO> reportes = reporteServicio.listar(titulo, categoria, estado, pagina);
-//        return ResponseEntity.ok(reportes);
-//    }
-
     // Marcar un reporte como importante
     @PutMapping("/{id}/importante")
     public ResponseEntity<String> marcarImportante(@PathVariable String id) throws Exception {
@@ -75,10 +51,14 @@ public class ReporteControlador {
         return ResponseEntity.ok("Reporte marcado como importante");
     }
 
-    // Cambiar el estado de un reporte
-    @PutMapping("/{id}/estado/{nuevoEstado}")
-    public ResponseEntity<String> cambiarEstado(@PathVariable String id, @PathVariable CambiarEstadoDTO cambiarEstadoDTO) throws Exception {
+    //Cambiar estado de reporte
+    @PutMapping("/api/reportes/{id}/estado")
+    public ResponseEntity<?> cambiarEstadoReporte(
+            @PathVariable String id,
+            @RequestBody CambiarEstadoDTO cambiarEstadoDTO
+    ) throws Exception {
         reporteServicio.cambiarEstadoReporte(id, cambiarEstadoDTO);
-        return ResponseEntity.ok("Estado del reporte actualizado a: " + cambiarEstadoDTO);
+        return ResponseEntity.ok(new MensajeDTO<>(false, "Estado del reporte actualizado correctamente"));
     }
+
 }
