@@ -10,6 +10,7 @@ import co.edu.uniquindio.proyecto.modelo.vo.HistorialReporte;
 import co.edu.uniquindio.proyecto.modelo.vo.Ubicacion;
 import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
+import co.edu.uniquindio.proyecto.seguridad.JWTUtilsHelper;
 import co.edu.uniquindio.proyecto.servicios.EmailServicio;
 import co.edu.uniquindio.proyecto.servicios.ImagenServicio;
 import co.edu.uniquindio.proyecto.servicios.ReporteServicio;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -36,6 +38,8 @@ public class ReporteServicioImpl implements ReporteServicio {
     private final WebSocketNotificationService webSocketNotificationService;
     private final ImagenServicioImpl imagenServicio;
     private final EmailServicio emailServicio;
+    private final JWTUtilsHelper jwtUtilsHelper;
+
 
 
     @Override
@@ -61,6 +65,11 @@ public class ReporteServicioImpl implements ReporteServicio {
         // Buscar el reporte existente
         Reporte reporteExistente = reporteRepositorio.findById(objectId)
                 .orElseThrow(() -> new NoSuchElementException("No se encontró un reporte con el id: " + id));
+        // 🛡️ Verificar que el usuario autenticado sea el propietario del reporte
+        String idUsuarioAutenticado = jwtUtilsHelper.obtenerIdUsuarioAutenticado();
+        if (!reporteExistente.getClienteId().toHexString().equals(idUsuarioAutenticado)) {
+            throw new IllegalAccessException("No tienes permisos para actualizar este reporte");
+        }
         // Utilizar el mapper para actualizar el documento existente
         reporteMapper.EditarReporteDTO(dto, reporteExistente);
         // Guardar los cambios
@@ -74,23 +83,23 @@ public class ReporteServicioImpl implements ReporteServicio {
         webSocketNotificationService.notificarClientes(notificacionDTO);
     }
 
+
     @Override
     public void eliminarReporte(String id) {
-        // Validar el ID
         if (!ObjectId.isValid(id)) {
             throw new IllegalArgumentException("El ID proporcionado no es válido: " + id);
         }
-        // Buscar el reporte por ID
         ObjectId objectId = new ObjectId(id);
-        Optional<Reporte> optionalReporte = reporteRepositorio.findById(objectId);
-        if (optionalReporte.isEmpty()) {
-            throw new NoSuchElementException("No se encontró un reporte con el id: " + id);
+        Reporte reporte = reporteRepositorio.findById(objectId)
+                .orElseThrow(() -> new NoSuchElementException("No se encontró un reporte con el id: " + id));
+        // Obtener el ID del usuario autenticado
+        String idUsuarioAutenticado = jwtUtilsHelper.obtenerIdUsuarioAutenticado();
+        // Validar que el usuario autenticado sea el dueño del reporte
+        if (!reporte.getClienteId().toString().equals(idUsuarioAutenticado)) {
+            throw new SecurityException("No tienes permisos para eliminar este reporte");
         }
-        Reporte reporte = optionalReporte.get();
         reporte.setEstadoActual(EstadoReporte.ELIMINADO);
-
         reporteRepositorio.save(reporte);
-        // Notificar por WebSocket que se eliminó un reporte (opcional, pero recomendable)
         NotificacionDTO notificacionDTO = new NotificacionDTO(
                 "Reporte Eliminado",
                 "Se ha eliminado el reporte: " + reporte.getTitulo(),
@@ -98,6 +107,7 @@ public class ReporteServicioImpl implements ReporteServicio {
         );
         webSocketNotificationService.notificarClientes(notificacionDTO);
     }
+
 
     @Override
     public ReporteDTO obtener(String id) {
@@ -131,13 +141,16 @@ public class ReporteServicioImpl implements ReporteServicio {
         // Actualizar el estado del reporte
         EstadoReporte nuevoEstado = EstadoReporte.valueOf(cambiarEstadoDTO.nuevoEstado());
         reporte.setEstadoActual(nuevoEstado);
-        // Opcional: también puedes agregar al historial del reporte
+
         List<HistorialReporte> historial = reporte.getHistorial();
+        if (historial == null) {
+            historial = new ArrayList<>();
+        }
         historial.add(HistorialReporte.builder()
                 .estado(nuevoEstado)
                 .observacion("Cambio de estado del reporte a: " + nuevoEstado.name())
                 .fecha(LocalDateTime.now())
-                .clienteId(reporte.getClienteId()) // si es ObjectId usuario;
+                .clienteId(reporte.getClienteId())
                 .build());
         reporte.setHistorial(historial);
         // Guardar los cambios

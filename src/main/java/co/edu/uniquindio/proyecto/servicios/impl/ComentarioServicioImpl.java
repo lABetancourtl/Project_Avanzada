@@ -45,6 +45,10 @@ public class ComentarioServicioImpl implements ComentarioServicio {
         if (!ObjectId.isValid(idReporte)) {
             throw new IllegalArgumentException("El ID del reporte no es válido: " + idReporte);
         }
+        // Validar que el mensaje no sea vacío o en blanco
+        if (crearComentarioDTO.mensaje() == null || crearComentarioDTO.mensaje().trim().isEmpty()) {
+            throw new IllegalArgumentException("El mensaje del comentario no puede estar vacío");
+        }
         ObjectId objectId = new ObjectId(idReporte);
         // Verificar que el reporte exista y obtenerlo
         Reporte reporte = reporteRepositorio.findById(objectId)
@@ -57,7 +61,6 @@ public class ComentarioServicioImpl implements ComentarioServicio {
         comentario.setReporteId(objectId);
         // Guardar el comentario directamente en la colección de comentarios
         comentarioRepositorio.save(comentario);
-        // --------------------------
         // Notificación por correo al creador del reporte
         Usuario usuario = usuarioRepositorio.findById(reporte.getClienteId())
                 .orElseThrow(() -> new Exception("Usuario creador del reporte no encontrado"));
@@ -70,7 +73,6 @@ public class ComentarioServicioImpl implements ComentarioServicio {
         );
         emailServicio.enviarCorreo(new EmailDTO(asunto, cuerpo, destinatario));
     }
-
 
     @Override
     public void editarComentario(String idReporte, String idComentario, String nuevoMensaje) throws Exception {

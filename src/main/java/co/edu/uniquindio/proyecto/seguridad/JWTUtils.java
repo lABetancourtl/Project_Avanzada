@@ -17,6 +17,9 @@ public class JWTUtils {
     @Value("${jwt.secret}")
     private String claveSecreta;
 
+    /**
+     * Genera un token JWT con un mapa de claims personalizados.
+     */
     public String generateToken(String id, Map<String, String> claims) {
         Instant now = Instant.now();
 
@@ -29,13 +32,22 @@ public class JWTUtils {
                 .compact();
     }
 
+    /**
+     * Parsea y valida un JWT recibido, devolviendo los claims.
+     */
     public Jws<Claims> parseJwt(String jwtString) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, IllegalArgumentException {
-        JwtParser jwtParser = Jwts.parser().verifyWith(getKey()).build();
+        JwtParser jwtParser = Jwts.parser()
+                .verifyWith(getKey())
+                .build();
+
         return jwtParser.parseSignedClaims(jwtString);
     }
 
+    /**
+     * Devuelve la clave secreta para firmar el JWT.
+     */
     private SecretKey getKey() {
         return Keys.hmacShaKeyFor(claveSecreta.getBytes());
     }
+
 }
- 
