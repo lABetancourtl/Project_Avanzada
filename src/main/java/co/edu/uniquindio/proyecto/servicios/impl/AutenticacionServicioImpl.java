@@ -26,8 +26,7 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
         // 1. Buscar el usuario por email
         Usuario usuario = usuarioRepositorio.findByEmail(loginDTO.email())
                 .orElseThrow(() -> new Exception("El correo no está registrado"));
-
-        // 2. Verificar contraseña
+        // 2. Verificar contraseña, ya viene cifrada desde el back
         if (!passwordEncoder.matches(loginDTO.password(), usuario.getPassword())) {
             throw new Exception("La contraseña es incorrecta");
         }
@@ -45,9 +44,6 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
     }
 
 }
-
-
-
 //    @Override
 //    public void validarCodigo(ValidarCodigoDTO validacion) {
 //

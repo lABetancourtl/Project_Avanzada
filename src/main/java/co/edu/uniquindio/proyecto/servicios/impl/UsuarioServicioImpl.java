@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios.impl;
 
+import ch.qos.logback.classic.encoder.JsonEncoder;
 import co.edu.uniquindio.proyecto.dto.*;
 import co.edu.uniquindio.proyecto.excepciones.RecursoNoEncontradoException;
 import co.edu.uniquindio.proyecto.mapper.UsuarioMapper;
@@ -10,12 +11,14 @@ import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.servicios.EmailServicio;
 import co.edu.uniquindio.proyecto.servicios.ImagenServicio;
 import co.edu.uniquindio.proyecto.servicios.UsuarioServicio;
+import co.edu.uniquindio.proyecto.util.EmailTemplateUtil;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,40 +35,33 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     private final MongoTemplate mongoTemplate;
     private final EmailServicio emailServicio;
     private final ImagenServicio imagenServicio;
-
-
+    EmailTemplateUtil EmailUtils;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void crear(CrearUsuarioDTO crearUsuarioDTO) throws Exception {
-        if( existeEmail(crearUsuarioDTO.email()) ){
-            throw new Exception("El correo "+crearUsuarioDTO.email()+" ya está en uso");
+        if (existeEmail(crearUsuarioDTO.email())) {
+            throw new Exception("El correo " + crearUsuarioDTO.email() + " ya está en uso");
         }
         Usuario usuario = usuarioMapper.toDocument(crearUsuarioDTO);
+        // Cifrar la contraseña antes de guardar
+        usuario.setPassword(passwordEncoder.encode(crearUsuarioDTO.password()));
+        // Generar código de activación
         String codigoActivacion = generarCodigo();
         usuario.setCodigoValidacion(new CodigoValidacion(
                 codigoActivacion,
                 LocalDateTime.now()
         ));
+        // Guardar usuario
         usuarioRepositorio.save(usuario);
+        // Preparar correo dinámico
         String asunto = "Verificación de cuenta";
-        String destinatario = usuario.getEmail(); // Primero declaras el destinatario
-
-        String cuerpo = """
-        <html>
-            <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
-                <div style="max-width: 600px; margin: auto; background-color: white; padding: 20px; border-radius: 8px;">
-                    <h2 style="color: #4CAF50; text-align: center;">Verificación de cuenta</h2>
-                    <p>¡Hola <strong>%s</strong>!</p>
-                    <p>Tu código de verificación es:</p>
-                    <h1 style="background-color: #eee; padding: 10px; border-radius: 4px; text-align: center;">%s</h1>
-                    <p>Si no solicitaste este código, por favor ignora este correo.</p>
-                    <p style="font-size: 12px; color: #888;">Este es un correo automático, por favor no respondas.</p>
-                </div>
-            </body>
-        </html>
-        """.formatted(usuario.getNombre(), codigoActivacion);
+        String destinatario = usuario.getEmail();
+        String cuerpo = EmailUtils.generarTemplateCodigoValidacion(usuario.getNombre(), codigoActivacion);
+        // Enviar correo
         emailServicio.enviarCorreo(new EmailDTO(asunto, cuerpo, destinatario));
     }
+
 
     @Override
     public void editar(String id,EditarUsuarioDTO editarUsuarioDTO) throws Exception {
