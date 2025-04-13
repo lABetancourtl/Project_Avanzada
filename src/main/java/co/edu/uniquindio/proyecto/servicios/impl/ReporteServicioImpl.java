@@ -150,7 +150,7 @@ public class ReporteServicioImpl implements ReporteServicio {
         String destinatario = usuario.getEmail();
         emailServicio.enviarCorreo(new EmailDTO(asunto, cuerpo, destinatario));
     }
-    
+
     @Override
     public InfoReporteDTO obtenerReporte(String id) throws Exception {
         return null;
