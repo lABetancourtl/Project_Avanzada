@@ -1,12 +1,10 @@
 package co.edu.uniquindio.proyecto.repositorios;
 
 import co.edu.uniquindio.proyecto.modelo.documents.Reporte;
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoReporte;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -23,4 +21,6 @@ public interface ReporteRepositorio extends MongoRepository<Reporte, ObjectId> {
 
     // Buscar reportes en una categoría específica
     List<Reporte> findByCategoriaId(ObjectId categoriaId);
+    List<Reporte> findByCategoriaId(String categoriaId);
+
 }

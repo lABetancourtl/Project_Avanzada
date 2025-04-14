@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/reportes")
@@ -44,6 +46,13 @@ public class ReporteControlador {
         return ResponseEntity.ok(reporte);
     }
 
+    @GetMapping("/reportes/categoria/{categoria}")
+    public ResponseEntity<List<ReporteDTO>> obtenerPorCategoria(@PathVariable String categoria) {
+        List<ReporteDTO> reportes = reporteServicio.obtenerPorCategoria(categoria);
+        return ResponseEntity.ok(reportes);
+    }
+
+
     // Marcar un reporte como importante
     @PutMapping("/{id}/importante")
     public ResponseEntity<String> marcarImportante(@PathVariable String id) throws Exception {
@@ -53,10 +62,7 @@ public class ReporteControlador {
 
     //Cambiar estado de reporte
     @PutMapping("/api/reportes/{id}/estado")
-    public ResponseEntity<?> cambiarEstadoReporte(
-            @PathVariable String id,
-            @RequestBody CambiarEstadoDTO cambiarEstadoDTO
-    ) throws Exception {
+    public ResponseEntity<?> cambiarEstadoReporte(@PathVariable String id, @RequestBody CambiarEstadoDTO cambiarEstadoDTO) throws Exception {
         reporteServicio.cambiarEstadoReporte(id, cambiarEstadoDTO);
         return ResponseEntity.ok(new MensajeDTO<>(false, "Estado del reporte actualizado correctamente"));
     }

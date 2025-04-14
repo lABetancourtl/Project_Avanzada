@@ -36,10 +36,23 @@ public class Reporte {
     private int contadorImportante;
 
 
+//    @Builder
+//    public Reporte(String titulo, ObjectId categoriaid, String descripcion, Ubicacion ubicacion, String foto, ObjectId clienteId, LocalDateTime fecha, List<HistorialReporte> historial, EstadoReporte estadoActual, int contadorImportante) {
+//        this.titulo = titulo;
+//        this.categoriaId = categoriaid;
+//        this.descripcion = descripcion;
+//        this.ubicacion = ubicacion;
+//        this.foto = foto;
+//        this.clienteId = clienteId;
+//        this.fecha = fecha;
+//        this.historial = historial;
+//        this.estadoActual = estadoActual;
+//        this.contadorImportante = contadorImportante;
+//    }
     @Builder
-    public Reporte(String titulo, ObjectId categoriaid, String descripcion, Ubicacion ubicacion, String foto, ObjectId clienteId, LocalDateTime fecha, List<HistorialReporte> historial, EstadoReporte estadoActual, int contadorImportante) {
+    public Reporte(String titulo, ObjectId categoriaId, String descripcion, Ubicacion ubicacion, String foto, ObjectId clienteId, LocalDateTime fecha, List<HistorialReporte> historial, EstadoReporte estadoActual, int contadorImportante) {
         this.titulo = titulo;
-        this.categoriaId = categoriaid;
+        this.categoriaId = categoriaId;
         this.descripcion = descripcion;
         this.ubicacion = ubicacion;
         this.foto = foto;

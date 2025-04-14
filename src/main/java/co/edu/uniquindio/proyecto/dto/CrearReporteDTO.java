@@ -22,7 +22,6 @@ public record CrearReporteDTO(
 
         @NotBlank(message = "La categoría es obligatoria")
         String categoriaId,
-        //Agregar campo que se llame estado pilas <----------------------
 
         boolean importante,
 

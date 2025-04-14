@@ -12,6 +12,8 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface ReporteMapper {
 
+
+    @Mapping(target = "categoriaId", source = "categoriaId")
     @Mapping(target = "ubicacion", source = "ubicacion")
     Reporte toDocument(CrearReporteDTO dto);
 
@@ -24,11 +26,12 @@ public interface ReporteMapper {
     @Mapping(target = "contadorImportante", ignore = true)
     @Mapping(target = "historial", ignore = true)
     void EditarReporteDTO(EditarReporteDTO dto, @MappingTarget Reporte reporte);
+
     // Conversión personalizada de String a ObjectId
     default ObjectId map(String value) {
         return new ObjectId(value);
     }
-    // ✅ Conversión personalizada de ObjectId a String (para toDTO)
+    // Conversión personalizada de ObjectId a String (para toDTO)
     default String map(ObjectId value) {
         return value != null ? value.toHexString() : null;
     }

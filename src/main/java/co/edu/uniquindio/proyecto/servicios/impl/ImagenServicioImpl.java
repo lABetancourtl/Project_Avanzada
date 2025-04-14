@@ -29,17 +29,23 @@ public class ImagenServicioImpl implements ImagenServicio {
         cloudinary = new Cloudinary(config);
     }
 
+//    @Override
+//    public Map subirImagen(MultipartFile imagen) throws Exception {
+//        File file = null;
+//        try {
+//            file = convertir(imagen);
+//            return cloudinary.uploader().upload(file, ObjectUtils.asMap("folder", "reportes"));
+//        } finally {
+//            if (file != null && file.exists()) {
+//                file.delete(); // Eliminar archivo temporal después de usarlo
+//            }
+//        }
+//    }
+
     @Override
     public Map subirImagen(MultipartFile imagen) throws Exception {
-        File file = null;
-        try {
-            file = convertir(imagen);
-            return cloudinary.uploader().upload(file, ObjectUtils.asMap("folder", "reportes"));
-        } finally {
-            if (file != null && file.exists()) {
-                file.delete(); // Eliminar archivo temporal después de usarlo
-            }
-        }
+        File file = convertir(imagen);
+        return cloudinary.uploader().upload(file, ObjectUtils.asMap("folder", "reportes"));
     }
 
 

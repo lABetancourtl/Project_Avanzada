@@ -1,7 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios.impl;
 
 import co.edu.uniquindio.proyecto.dto.*;
-import co.edu.uniquindio.proyecto.modelo.documents.Categoria;
 import co.edu.uniquindio.proyecto.modelo.documents.Reporte;
 import co.edu.uniquindio.proyecto.modelo.documents.Usuario;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoReporte;
@@ -12,20 +11,18 @@ import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.seguridad.JWTUtilsHelper;
 import co.edu.uniquindio.proyecto.servicios.EmailServicio;
-import co.edu.uniquindio.proyecto.servicios.ImagenServicio;
 import co.edu.uniquindio.proyecto.servicios.ReporteServicio;
 import co.edu.uniquindio.proyecto.mapper.ReporteMapper;
 import co.edu.uniquindio.proyecto.util.EmailTemplateUtil;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -123,6 +120,16 @@ public class ReporteServicioImpl implements ReporteServicio {
         return reporteMapper.toDTO(reporte);
     }
 
+    @Override
+    public List<ReporteDTO> obtenerPorCategoria(String categoriaId) {
+        // Convertimos el String a ObjectId
+        ObjectId categoriaObjectId = new ObjectId(categoriaId);
+        List<Reporte> reportes = reporteRepositorio.findByCategoriaId(categoriaObjectId);
+        return reportes.stream()
+                .map(reporteMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+    
     @Override
     public void marcarImportante(String id) {
 

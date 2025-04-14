@@ -4,6 +4,7 @@ import co.edu.uniquindio.proyecto.dto.LoginDTO;
 import co.edu.uniquindio.proyecto.dto.TokenDTO;
 import co.edu.uniquindio.proyecto.dto.ValidarCodigoDTO;
 import co.edu.uniquindio.proyecto.modelo.documents.Usuario;
+import co.edu.uniquindio.proyecto.modelo.enums.EstadoUsuario;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.seguridad.JWTUtils;
 import co.edu.uniquindio.proyecto.servicios.AutenticacionServicio;
@@ -26,6 +27,10 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
         // 1. Buscar el usuario por email
         Usuario usuario = usuarioRepositorio.findByEmail(loginDTO.email())
                 .orElseThrow(() -> new Exception("El correo no está registrado"));
+        if (!usuario.getEstado().equals(EstadoUsuario.ACTIVO)) {
+            throw new Exception("El usuario no esta activo");
+        }
+
         // 2. Verificar contraseña, ya viene cifrada desde el back
         if (!passwordEncoder.matches(loginDTO.password(), usuario.getPassword())) {
             throw new Exception("La contraseña es incorrecta");
@@ -34,7 +39,7 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
         Map<String, String> claims = Map.of(
                 "id", usuario.getId().toString(),
                 "email", usuario.getEmail(),
-                "rol", usuario.getRol().name() // suponiendo que tienes un Enum llamado Rol
+                "rol", usuario.getRol().name()
         );
         // 4. Generar token con tu método de JWTUtils
         String jwtToken = jwtUtils.generateToken(usuario.getId().toString(), claims);
@@ -42,7 +47,6 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
         // 5. Retornar el token en el DTO
         return new TokenDTO(jwtToken, null);
     }
-
 }
 //    @Override
 //    public void validarCodigo(ValidarCodigoDTO validacion) {
