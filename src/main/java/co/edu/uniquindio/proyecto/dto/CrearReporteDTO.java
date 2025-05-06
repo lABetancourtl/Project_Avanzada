@@ -14,8 +14,8 @@ public record CrearReporteDTO(
         @NotBlank(message = "La descripción es obligatoria")
         String descripcion,
 
-        @NotBlank(message = "El ID del cliente es obligatorio")
-        String clienteId,
+ //       @NotBlank(message = "El ID del cliente es obligatorio")
+   //     String clienteId,
 
         @NotNull(message = "La ubicación es obligatoria")
         UbicacionDTO ubicacion,

@@ -8,6 +8,7 @@ import co.edu.uniquindio.proyecto.modelo.documents.Usuario;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoUsuario;
 import co.edu.uniquindio.proyecto.modelo.vo.CodigoValidacion;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
+import co.edu.uniquindio.proyecto.seguridad.JWTUtilsHelper;
 import co.edu.uniquindio.proyecto.servicios.EmailServicio;
 import co.edu.uniquindio.proyecto.servicios.ImagenServicio;
 import co.edu.uniquindio.proyecto.servicios.UsuarioServicio;
@@ -18,6 +19,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     private final ImagenServicio imagenServicio;
     EmailTemplateUtil EmailUtils;
     private final PasswordEncoder passwordEncoder;
+    private final JWTUtilsHelper jwtUtilsHelper;
 
     @Override
     public void crear(CrearUsuarioDTO crearUsuarioDTO) throws Exception {
@@ -65,11 +68,13 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 
     @Override
     public void editar(String id,EditarUsuarioDTO editarUsuarioDTO) throws Exception {
+        // Obtiene el ID del usuario autenticado desde el contexto de seguridad
+        String idAutenticado = jwtUtilsHelper.obtenerIdUsuarioAutenticado();
+        if (!idAutenticado.equals(id)) {
+            throw new Exception ("No tienes permiso para editar este perfil.");
+        }
         Usuario usuario = obtenerUsuarioPorId(id);
-
-
         usuarioMapper.editarUsuarioDTO(editarUsuarioDTO, usuario);
-
         usuarioRepositorio.save(usuario);
     }
 
@@ -77,6 +82,11 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     public void eliminar(String id) throws Exception {
         if (!ObjectId.isValid(id)) {
             throw new Exception("ID inválido: " + id);
+        }
+        // Obtiene el ID del usuario autenticado desde el contexto de seguridad
+        String idAutenticado = jwtUtilsHelper.obtenerIdUsuarioAutenticado();
+        if (!idAutenticado.equals(id)) {
+            throw new Exception ("No tienes permiso para eliminar este perfil.");
         }
         Usuario usuario = obtenerUsuarioPorId(id);
         usuario.setEstado(EstadoUsuario.ELIMINADO);
@@ -179,7 +189,8 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         if(!LocalDateTime.now().isBefore(usuario.getCodigoValidacion().getFechaCreacion().plusMinutes(15))) {
             throw new Exception("El código de verificación ha caducado");
         }
-        usuario.setPassword(cambiarPasswordDTO.nuevaPassword());
+        String nuevaPassword = passwordEncoder.encode(cambiarPasswordDTO.nuevaPassword());
+        usuario.setPassword(nuevaPassword);
         usuario.setCodigoValidacion(null);
         usuarioRepositorio.save(usuario);
     }

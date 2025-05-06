@@ -41,13 +41,23 @@ public class ReporteServicioImpl implements ReporteServicio {
 
     @Override
     public void crearReporte(CrearReporteDTO dto) {
+        // Obtener el ID del usuario autenticado desde el token JWT
+        String idCliente = jwtUtilsHelper.obtenerIdUsuarioAutenticado();
+
         // Buscar usuario o lanzar excepción personalizada
-        Usuario usuario = obtenerUsuarioActivo(dto.clienteId());
+        Usuario usuario = obtenerUsuarioActivo(idCliente);
+
         // Crear el documento Reporte a partir del DTO
         Reporte reporte = reporteMapper.toDocument(dto);
+
+        // Asignar manualmente el cliente al reporte
+        reporte.setClienteId(usuario.getId());
+
         asignarDatosAdicionales(reporte);
+
         // Guardar el reporte en la base de datos
         reporteRepositorio.save(reporte);
+
         // Enviar notificación por WebSocket
         notificarNuevoReporte(reporte);
     }
@@ -62,7 +72,7 @@ public class ReporteServicioImpl implements ReporteServicio {
         // Buscar el reporte existente
         Reporte reporteExistente = reporteRepositorio.findById(objectId)
                 .orElseThrow(() -> new NoSuchElementException("No se encontró un reporte con el id: " + id));
-        // 🛡️ Verificar que el usuario autenticado sea el propietario del reporte
+        // Verificar que el usuario autenticado sea el propietario del reporte
         String idUsuarioAutenticado = jwtUtilsHelper.obtenerIdUsuarioAutenticado();
         if (!reporteExistente.getClienteId().toHexString().equals(idUsuarioAutenticado)) {
             throw new IllegalAccessException("No tienes permisos para actualizar este reporte");
@@ -79,6 +89,7 @@ public class ReporteServicioImpl implements ReporteServicio {
         );
         webSocketNotificationService.notificarClientes(notificacionDTO);
     }
+
 
 
     @Override
@@ -105,7 +116,7 @@ public class ReporteServicioImpl implements ReporteServicio {
         webSocketNotificationService.notificarClientes(notificacionDTO);
     }
 
-
+/*
     @Override
     public ReporteDTO obtener(String id) {
         // Validar que el ID tenga formato correcto
@@ -119,6 +130,21 @@ public class ReporteServicioImpl implements ReporteServicio {
         // Convertir el documento a DTO usando el mapper
         return reporteMapper.toDTO(reporte);
     }
+ */
+
+    @Override
+    public List<ReporteDTO> obtener() {
+        String idUsuario = jwtUtilsHelper.obtenerIdUsuarioAutenticado();
+
+        ObjectId idCliente = new ObjectId(idUsuario);
+        List<Reporte> reportes = reporteRepositorio.findAllByClienteId(idCliente);
+
+        // Convertir la lista de entidades a DTOs
+        return reportes.stream()
+                .map(reporteMapper::toDTO)
+                .toList();
+    }
+
 
     @Override
     public List<ReporteDTO> obtenerPorCategoria(String categoriaId) {

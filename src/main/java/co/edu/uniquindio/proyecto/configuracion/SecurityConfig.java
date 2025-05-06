@@ -5,6 +5,7 @@ import co.edu.uniquindio.proyecto.seguridad.JWTFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -49,7 +50,11 @@ public class SecurityConfig {
                                 "/webjars/**"
                         ).permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/usuarios", "/api/usuarios/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll() // crear usuario
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/codigoVerificacion").permitAll() // enviar código
+                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/*/password").permitAll() // cambiar password
+                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/*/activar").permitAll()  // activar cuenta
+                        .requestMatchers("/api/categorias/**").hasRole("ADMINISTRADOR")  //permitir ingreso a esta ruta solo a los administradores
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(new AutenticacionEntryPoint()))
@@ -79,6 +84,6 @@ public class SecurityConfig {
     }
     @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults() {
-        return new GrantedAuthorityDefaults(""); // 👈 Esto es lo que te hacía falta
+        return new GrantedAuthorityDefaults("");
     }
 }

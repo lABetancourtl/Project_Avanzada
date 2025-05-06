@@ -39,11 +39,19 @@ public class ReporteControlador {
         return ResponseEntity.ok("Reporte eliminado correctamente");
     }
 
+    /*
     // Obtener un reporte específico
-    @GetMapping("/{id}")
+    @GetMapping("/mis-reportes/{id}")
     public ResponseEntity<ReporteDTO> obtener(@PathVariable String id) throws Exception {
         ReporteDTO reporte = reporteServicio.obtener(id);
         return ResponseEntity.ok(reporte);
+    }
+     */
+
+    @GetMapping("/mis-reportes/")
+    public ResponseEntity<List<ReporteDTO>> obtener() throws Exception {
+        List<ReporteDTO> misReportes = reporteServicio.obtener();
+        return ResponseEntity.ok(misReportes);
     }
 
     @GetMapping("/reportes/categoria/{categoria}")

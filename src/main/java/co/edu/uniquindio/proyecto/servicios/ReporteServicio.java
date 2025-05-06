@@ -13,7 +13,9 @@ public interface ReporteServicio {
     void crearReporte(@Valid CrearReporteDTO reporte) throws Exception;
     void eliminarReporte(String id) throws Exception;
     void actualizarReporte(String id, EditarReporteDTO reporte) throws Exception;
-    ReporteDTO obtener(String id) throws Exception;
+   // ReporteDTO obtener(String id) throws Exception;
+
+    List<ReporteDTO> obtener();
 
     List<ReporteDTO> obtenerPorCategoria(String categoria);
 
