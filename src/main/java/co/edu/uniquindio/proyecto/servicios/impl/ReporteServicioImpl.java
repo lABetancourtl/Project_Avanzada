@@ -133,7 +133,7 @@ public class ReporteServicioImpl implements ReporteServicio {
  */
 
     @Override
-    public List<ReporteDTO> obtener() {
+    public List<ReporteDTO> obtenerMisReportes() {
         String idUsuario = jwtUtilsHelper.obtenerIdUsuarioAutenticado();
 
         ObjectId idCliente = new ObjectId(idUsuario);
