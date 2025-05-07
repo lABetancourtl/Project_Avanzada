@@ -23,7 +23,7 @@ public class CategoriaServicioImpl implements CategoriaServicio {
 
     @Override
     public void crearCategoria(CrearCategoriaDTO dto) throws Exception {
-        // Validar si ya existe una categoría con el mismo nombre (opcional pero recomendable)
+        // Validar si ya existe una categoría con el mismo nombre
         if (categoriaRepositorio.existsByNombreIgnoreCase(dto.nombre())) {
             throw new Exception("Ya existe una categoría con el nombre: " + dto.nombre());
         }

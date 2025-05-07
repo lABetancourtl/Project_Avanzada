@@ -22,5 +22,7 @@ public interface ReporteRepositorio extends MongoRepository<Reporte, ObjectId> {
     // Buscar reportes en una categoría específica
     List<Reporte> findByCategoriaId(ObjectId categoriaId);
     List<Reporte> findByCategoriaId(String categoriaId);
+    List<Reporte> findAllByClienteId(ObjectId clienteId);
+
 
 }

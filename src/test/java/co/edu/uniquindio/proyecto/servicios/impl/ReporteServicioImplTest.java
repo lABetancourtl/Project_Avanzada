@@ -182,7 +182,7 @@ class ReporteServicioImplTest {
         // Simulamos comportamiento del mapper
         Mockito.when(reporteMapper.toDTO(reporte)).thenReturn(reporteDTO);
         // Act
-        ReporteDTO resultado = reporteServicio.obtener(id);
+        ReporteDTO resultado = reporteServicio.obtenerMisReportes(id);
         // Assert
         Assertions.assertNotNull(resultado);
         Assertions.assertEquals(id, resultado.id());
@@ -207,7 +207,7 @@ class ReporteServicioImplTest {
 
         // Act & Assert
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            reporteServicio.obtener(idInvalido);
+            reporteServicio.obtenerMisReportes(idInvalido);
         });
 
         // Verificamos que no se llamen las dependencias, porque el método debe fallar antes
@@ -225,7 +225,7 @@ class ReporteServicioImplTest {
 
         // Act & Assert
         Assertions.assertThrows(NoSuchElementException.class, () -> {
-            reporteServicio.obtener(idValido);
+            reporteServicio.obtenerMisReportes(idValido);
         });
 
         // Verificamos que se llamó al repositorio pero no al mapper

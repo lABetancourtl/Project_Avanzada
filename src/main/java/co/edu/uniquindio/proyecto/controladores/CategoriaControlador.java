@@ -17,11 +17,16 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/categorias")
 public class CategoriaControlador {
+    
+    /*
+    Este controlador es el encargado de manejar las solicitudes HTTP relacionadas con las categorias.
+    solo es accedido por los administradores, la restriccion se realiza en la clase SecurityConfig con la siguiente linea
+    .requestMatchers("/api/categorias/**").hasRole("ADMINISTRADOR")
+     */
 
     private final CategoriaServicio categoriaServicio;
 
     // Crear una nueva categoría (solo administradores)
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<MensajeDTO<String>>  crear(@Valid @RequestBody CrearCategoriaDTO categoria) throws Exception {
         categoriaServicio.crearCategoria(categoria);
@@ -29,7 +34,6 @@ public class CategoriaControlador {
     }
 
     // Editar una categoría existente
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping("/{id}")
     public ResponseEntity<MensajeDTO<String>>  editar(@PathVariable String id, @Valid @RequestBody CrearCategoriaDTO categoria) throws Exception {
         categoriaServicio.editarCategoria(id, categoria);
@@ -37,7 +41,6 @@ public class CategoriaControlador {
     }
 
     // Eliminar una categoría
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<MensajeDTO<String>>  eliminar(@PathVariable String id) throws Exception {
         categoriaServicio.eliminarCategoria(id);
@@ -45,7 +48,6 @@ public class CategoriaControlador {
     }
 
     // Listar todas las categorías
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping
     public ResponseEntity<List<CategoriaDTO>> listar() {
         List<CategoriaDTO> categorias = categoriaServicio.listar();

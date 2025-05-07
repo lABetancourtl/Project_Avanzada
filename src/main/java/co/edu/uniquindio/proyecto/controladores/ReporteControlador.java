@@ -4,10 +4,8 @@ import co.edu.uniquindio.proyecto.dto.*;
 import co.edu.uniquindio.proyecto.servicios.ReporteServicio;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -39,11 +37,19 @@ public class ReporteControlador {
         return ResponseEntity.ok("Reporte eliminado correctamente");
     }
 
+    /*
     // Obtener un reporte específico
-    @GetMapping("/{id}")
+    @GetMapping("/mis-reportes/{id}")
     public ResponseEntity<ReporteDTO> obtener(@PathVariable String id) throws Exception {
         ReporteDTO reporte = reporteServicio.obtener(id);
         return ResponseEntity.ok(reporte);
+    }
+     */
+
+    @GetMapping("/mis-reportes/")
+    public ResponseEntity<List<ReporteDTO>> obtenerMisReportes() throws Exception {
+        List<ReporteDTO> misReportes = reporteServicio.obtenerMisReportes();
+        return ResponseEntity.ok(misReportes);
     }
 
     @GetMapping("/reportes/categoria/{categoria}")
