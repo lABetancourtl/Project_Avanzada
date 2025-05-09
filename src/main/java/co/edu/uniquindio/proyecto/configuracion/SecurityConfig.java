@@ -52,11 +52,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll() // crear usuario
                         .requestMatchers(HttpMethod.POST, "/api/usuarios/codigoVerificacion").permitAll() // enviar código
-                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/*/password").permitAll() // cambiar password
-                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/*/activar").permitAll()  // activar cuenta
-                        .requestMatchers("/api/categorias/**").hasRole("ADMINISTRADOR")  //permitir ingreso a esta ruta solo a los administradores
+                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/cambiarpassword").permitAll() // cambiar password
+                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/activar").permitAll()  // activar cuenta
+
+                        .requestMatchers(HttpMethod.POST, "/api/categorias").hasRole("ADMINISTRADOR")
+                        .requestMatchers(HttpMethod.DELETE, "/api/categorias/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasRole("ADMINISTRADOR") //permitir ingreso a esta ruta solo a los administradores
                         .anyRequest().authenticated()
-                )
+                ) // @PutMapping("/{email}/activar")
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(new AutenticacionEntryPoint()))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

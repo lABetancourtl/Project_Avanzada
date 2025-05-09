@@ -1,8 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios;
 
 import co.edu.uniquindio.proyecto.dto.*;
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoReporte;
-import co.edu.uniquindio.proyecto.modelo.vo.Ubicacion;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -16,15 +14,13 @@ public interface ReporteServicio {
 
     List<ReporteDTO> obtenerMisReportes();
 
-    List<ReporteDTO> obtenerPorCategoria(String categoria);
+    List<ReporteDTO> obtenerReportePorCategoria(String categoria);
 
-    void marcarImportante(String id) throws Exception;
+    List<ReporteDTO> obtenerReportesPorRadio(double latitud, double longitud, double radio);
+
+    void marcarReporteImportante(String id) throws Exception;
     void cambiarEstadoReporte(String id, CambiarEstadoDTO estado) throws Exception;
-    InfoReporteDTO obtenerReporte(String id) throws Exception;
-    List<InfoReporteDTO> obtenerReportes(String categoria, EstadoReporte estadoReporte, int pagina) throws Exception;
-    List<InfoReporteDTO> obtenerReportesUsuario(String idusuario, int pagina) throws Exception;
-    List<InfoReporteDTO> obtenerReportes(Ubicacion ubicacion) throws Exception;
-    List<HistorialEstadoDTO> listarHistorialEstados(String id) throws Exception;
+
 
     //void crearReporte(CrearReporteDTO reporte, MultipartFile imagen) throws Exception;
 }

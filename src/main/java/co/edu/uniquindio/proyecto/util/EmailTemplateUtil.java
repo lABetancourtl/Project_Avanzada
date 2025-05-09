@@ -2,22 +2,31 @@ package co.edu.uniquindio.proyecto.util;
 
 public class EmailTemplateUtil {
 
-    public static String generarTemplateCodigoValidacion(String nombreUsuario, String codigoActivacion) {
+    public static String generarTemplateCodigoValidacion(String nombreUsuario, String codigoActivacion, String email) {
         return """
-            <html>
-                <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
-                    <div style="max-width: 600px; margin: auto; background-color: white; padding: 20px; border-radius: 8px;">
-                        <h2 style="color: #4CAF50; text-align: center;">Verificación de cuenta</h2>
-                        <p>¡Hola <strong>%s</strong>!</p>
-                        <p>Tu código de verificación es:</p>
-                        <h1 style="background-color: #eee; padding: 10px; border-radius: 4px; text-align: center;">%s</h1>
-                        <p>Si no solicitaste este código, por favor ignora este correo.</p>
-                        <p style="font-size: 12px; color: #888;">Este es un correo automático, por favor no respondas.</p>
-                    </div>
-                </body>
-            </html>
-            """.formatted(nombreUsuario, codigoActivacion);
+    <html>
+        <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+            <div style="max-width: 600px; margin: auto; background-color: white; padding: 20px; border-radius: 8px;">
+                <h2 style="color: #4CAF50; text-align: center;">Verificación de cuenta</h2>
+                <p>¡Hola <strong>%s</strong>!</p>
+                <p>Tu código de verificación es:</p>
+                <h1 style="background-color: #eee; padding: 10px; border-radius: 4px; text-align: center;">%s</h1>
+                <p>Para activar tu cuenta, por favor haz clic en el siguiente enlace:</p>
+                <p style="text-align: center;">
+                    <a href="http://localhost:4200/autenticacion?email=%s" 
+                       style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
+                       Activar mi cuenta
+                    </a>
+                </p>
+                <p>Si no solicitaste este código, por favor ignora este correo.</p>
+                <p style="font-size: 12px; color: #888;">Este es un correo automático, por favor no respondas.</p>
+            </div>
+        </body>
+    </html>
+    """.formatted(nombreUsuario, codigoActivacion, java.net.URLEncoder.encode(email, java.nio.charset.StandardCharsets.UTF_8));
     }
+
+
 
     public static String generarTemplateNuevoComentario(String nombreUsuario, String tituloReporte, String mensajeComentario) {
         return """

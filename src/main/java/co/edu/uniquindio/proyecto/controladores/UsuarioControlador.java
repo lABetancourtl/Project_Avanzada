@@ -60,13 +60,13 @@ public class UsuarioControlador {
         return ResponseEntity.ok(new MensajeDTO<>(false, "Perfil actualizado correctamente."));
     }
 
-    @PutMapping("/{email}/password")
+    @PutMapping("/cambiarpassword")
     public ResponseEntity<MensajeDTO<String>> cambiarPassword(@RequestBody CambiarPasswordDTO cambiarPasswordDTO) throws Exception {
         usuarioServicio.cambiarPassword(cambiarPasswordDTO);
         return ResponseEntity.ok(new MensajeDTO<>(false, "Password cambiado correctamente."));
     }
 
-    @PutMapping("/{email}/activar")
+    @PutMapping("/activar")
     public ResponseEntity<MensajeDTO<String>> activarCuenta(@RequestBody ActivarCuentaDTO activarCuentaDTO) throws Exception {
         usuarioServicio.activarCuenta(activarCuentaDTO);
         return ResponseEntity.ok(new MensajeDTO<>(false, "Activado correctamente."));

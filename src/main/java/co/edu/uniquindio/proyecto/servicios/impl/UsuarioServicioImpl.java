@@ -60,7 +60,11 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         // Preparar correo dinámico
         String asunto = "Verificación de cuenta";
         String destinatario = usuario.getEmail();
-        String cuerpo = EmailUtils.generarTemplateCodigoValidacion(usuario.getNombre(), codigoActivacion);
+        String cuerpo = EmailUtils.generarTemplateCodigoValidacion(
+                usuario.getNombre(),
+                codigoActivacion,
+                usuario.getEmail()
+        );
         // Enviar correo
         emailServicio.enviarCorreo(new EmailDTO(asunto, cuerpo, destinatario));
     }
@@ -180,14 +184,14 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     @Override
     public void cambiarPassword(CambiarPasswordDTO cambiarPasswordDTO) throws Exception {
         Usuario usuario = obtenerPorEmail(cambiarPasswordDTO.email());
-        if(!usuario.getCodigoValidacion().getCodigo().equals(cambiarPasswordDTO.codigoValidacion())) {
-            throw new Exception("El código de verificación es incorrecto");
-        }
         if (usuario.getCodigoValidacion() == null) {
-            throw new Exception("No usuario no tiene un código de verificación");
+            throw new IllegalArgumentException("El usuario no tiene un código de verificación");
         }
-        if(!LocalDateTime.now().isBefore(usuario.getCodigoValidacion().getFechaCreacion().plusMinutes(15))) {
-            throw new Exception("El código de verificación ha caducado");
+        if (!usuario.getCodigoValidacion().getCodigo().equals(cambiarPasswordDTO.codigoValidacion())) {
+            throw new IllegalArgumentException("El código de verificación es incorrecto");
+        }
+        if (!LocalDateTime.now().isBefore(usuario.getCodigoValidacion().getFechaCreacion().plusMinutes(15))) {
+            throw new IllegalArgumentException("El código de verificación ha caducado");
         }
         String nuevaPassword = passwordEncoder.encode(cambiarPasswordDTO.nuevaPassword());
         usuario.setPassword(nuevaPassword);
