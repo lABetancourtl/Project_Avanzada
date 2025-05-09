@@ -18,33 +18,25 @@ public class ReporteControlador {
 
     // Crear un nuevo reporte
     @PostMapping
-    public ResponseEntity<MensajeDTO<String>> crear(@Valid @RequestBody CrearReporteDTO reporte) throws Exception {
+    public ResponseEntity<MensajeDTO<String>> crearReporte(@Valid @RequestBody CrearReporteDTO reporte) throws Exception {
         reporteServicio.crearReporte(reporte);
         return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte creado exitosamente"));
     }
 
     // Editar un reporte existente
     @PutMapping("/{id}")
-    public ResponseEntity<MensajeDTO<String>> editar(@PathVariable String id, @Valid @RequestBody EditarReporteDTO dto) throws Exception {
+    public ResponseEntity<MensajeDTO<String>> actualizarReporte(@PathVariable String id, @Valid @RequestBody EditarReporteDTO dto) throws Exception {
         reporteServicio.actualizarReporte(id, dto);
         return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte editado correctamente"));
     }
 
     // Eliminar un reporte
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminar(@PathVariable String id) throws Exception {
+    public ResponseEntity<String> eliminarReporte(@PathVariable String id) throws Exception {
         reporteServicio.eliminarReporte(id);
         return ResponseEntity.ok("Reporte eliminado correctamente");
     }
 
-    /*
-    // Obtener un reporte específico
-    @GetMapping("/mis-reportes/{id}")
-    public ResponseEntity<ReporteDTO> obtener(@PathVariable String id) throws Exception {
-        ReporteDTO reporte = reporteServicio.obtener(id);
-        return ResponseEntity.ok(reporte);
-    }
-     */
 
     @GetMapping("/mis-reportes/")
     public ResponseEntity<List<ReporteDTO>> obtenerMisReportes() throws Exception {
@@ -53,16 +45,26 @@ public class ReporteControlador {
     }
 
     @GetMapping("/reportes/categoria/{categoria}")
-    public ResponseEntity<List<ReporteDTO>> obtenerPorCategoria(@PathVariable String categoria) {
-        List<ReporteDTO> reportes = reporteServicio.obtenerPorCategoria(categoria);
+    public ResponseEntity<List<ReporteDTO>> obtenerReportePorCategoria(@PathVariable String categoria) {
+        List<ReporteDTO> reportes = reporteServicio.obtenerReportePorCategoria(categoria);
+        return ResponseEntity.ok(reportes);
+    }
+
+
+    @GetMapping("/reportes/radio")
+    public ResponseEntity<List<ReporteDTO>> obtenerReportesPorRadio(
+            @RequestParam("latitud") double latitud,
+            @RequestParam("longitud") double longitud,
+            @RequestParam("radio") double radio) {
+        List<ReporteDTO> reportes = reporteServicio.obtenerReportesPorRadio(latitud, longitud, radio);
         return ResponseEntity.ok(reportes);
     }
 
 
     // Marcar un reporte como importante
     @PutMapping("/{id}/importante")
-    public ResponseEntity<String> marcarImportante(@PathVariable String id) throws Exception {
-        reporteServicio.marcarImportante(id);
+    public ResponseEntity<String> marcarReporteImportante(@PathVariable String id) throws Exception {
+        reporteServicio.marcarReporteImportante(id);
         return ResponseEntity.ok("Reporte marcado como importante");
     }
 

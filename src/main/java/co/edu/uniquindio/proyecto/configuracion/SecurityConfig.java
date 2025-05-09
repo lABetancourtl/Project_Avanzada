@@ -52,11 +52,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll() // crear usuario
                         .requestMatchers(HttpMethod.POST, "/api/usuarios/codigoVerificacion").permitAll() // enviar código
-                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/*/password").permitAll() // cambiar password
-                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/*/activar").permitAll()  // activar cuenta
-                        .requestMatchers("/api/categorias/**").hasRole("ADMINISTRADOR")  //permitir ingreso a esta ruta solo a los administradores
+                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/cambiarpassword").permitAll() // cambiar password
+                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/activar").permitAll()  // activar cuenta
+
+                        .requestMatchers(HttpMethod.POST, "/api/categorias").hasRole("ADMINISTRADOR")
+                        .requestMatchers(HttpMethod.DELETE, "/api/categorias/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers(HttpMethod.PUT, "/api/categorias/**").hasRole("ADMINISTRADOR") //permitir ingreso a esta ruta solo a los administradores
                         .anyRequest().authenticated()
-                )
+                ) // @PutMapping("/{email}/activar")
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(new AutenticacionEntryPoint()))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -65,7 +68,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("*"));
+        config.setAllowedOrigins(List.of("http://localhost:4200")); // Origen FRONT
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

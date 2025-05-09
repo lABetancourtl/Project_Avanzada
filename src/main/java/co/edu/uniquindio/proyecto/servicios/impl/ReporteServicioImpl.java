@@ -6,7 +6,6 @@ import co.edu.uniquindio.proyecto.modelo.documents.Usuario;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoReporte;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoUsuario;
 import co.edu.uniquindio.proyecto.modelo.vo.HistorialReporte;
-import co.edu.uniquindio.proyecto.modelo.vo.Ubicacion;
 import co.edu.uniquindio.proyecto.repositorios.ReporteRepositorio;
 import co.edu.uniquindio.proyecto.repositorios.UsuarioRepositorio;
 import co.edu.uniquindio.proyecto.seguridad.JWTUtilsHelper;
@@ -33,7 +32,6 @@ public class ReporteServicioImpl implements ReporteServicio {
     private final UsuarioRepositorio usuarioRepositorio;
     private final ReporteMapper reporteMapper;
     private final WebSocketNotificationService webSocketNotificationService;
-    private final ImagenServicioImpl imagenServicio;
     private final EmailServicio emailServicio;
     private final JWTUtilsHelper jwtUtilsHelper;
 
@@ -147,7 +145,7 @@ public class ReporteServicioImpl implements ReporteServicio {
 
 
     @Override
-    public List<ReporteDTO> obtenerPorCategoria(String categoriaId) {
+    public List<ReporteDTO> obtenerReportePorCategoria(String categoriaId) {
         // Convertimos el String a ObjectId
         ObjectId categoriaObjectId = new ObjectId(categoriaId);
         List<Reporte> reportes = reporteRepositorio.findByCategoriaId(categoriaObjectId);
@@ -155,9 +153,38 @@ public class ReporteServicioImpl implements ReporteServicio {
                 .map(reporteMapper::toDTO)
                 .collect(Collectors.toList());
     }
-    
+
     @Override
-    public void marcarImportante(String id) {
+    public List<ReporteDTO> obtenerReportesPorRadio(double latitud, double longitud, double radioKm) {
+        List<Reporte> todosLosReportes = reporteRepositorio.findAll();
+
+        return todosLosReportes.stream()
+                .filter(reporte -> {
+                    double distancia = calcularDistanciaHaversine(
+                            latitud, longitud,
+                            reporte.getUbicacion().getLatitud(), reporte.getUbicacion().getLongitud()
+                    );
+                    return distancia <= radioKm;
+                })
+                .map(reporteMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    private double calcularDistanciaHaversine(double lat1, double lon1, double lat2, double lon2) {
+        final int RADIO_TIERRA_KM = 6371;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return RADIO_TIERRA_KM * c;
+    }
+
+
+
+    @Override
+    public void marcarReporteImportante(String id) {
 
     }
 
@@ -197,30 +224,6 @@ public class ReporteServicioImpl implements ReporteServicio {
         emailServicio.enviarCorreo(new EmailDTO(asunto, cuerpo, destinatario));
     }
 
-    @Override
-    public InfoReporteDTO obtenerReporte(String id) throws Exception {
-        return null;
-    }
-
-    @Override
-    public List<InfoReporteDTO> obtenerReportes(String categoria, EstadoReporte estadoReporte, int pagina) throws Exception {
-        return List.of();
-    }
-
-    @Override
-    public List<InfoReporteDTO> obtenerReportesUsuario(String idusuario, int pagina) throws Exception {
-        return List.of();
-    }
-
-    @Override
-    public List<InfoReporteDTO> obtenerReportes(Ubicacion ubicacion) throws Exception {
-        return List.of();
-    }
-
-    @Override
-    public List<HistorialEstadoDTO> listarHistorialEstados(String id) throws Exception {
-        return List.of();
-    }
 
     private Usuario obtenerUsuarioActivo(String clienteId) {
         return usuarioRepositorio.findById(new ObjectId(clienteId))
@@ -242,5 +245,7 @@ public class ReporteServicioImpl implements ReporteServicio {
         );
         webSocketNotificationService.notificarClientes(notificacionDTO);
     }
+
+
 
 }
