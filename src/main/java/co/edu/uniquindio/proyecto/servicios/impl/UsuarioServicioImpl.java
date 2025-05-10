@@ -1,6 +1,5 @@
 package co.edu.uniquindio.proyecto.servicios.impl;
 
-import ch.qos.logback.classic.encoder.JsonEncoder;
 import co.edu.uniquindio.proyecto.dto.*;
 import co.edu.uniquindio.proyecto.excepciones.RecursoNoEncontradoException;
 import co.edu.uniquindio.proyecto.mapper.UsuarioMapper;
@@ -19,13 +18,12 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -40,6 +38,38 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     EmailTemplateUtil EmailUtils;
     private final PasswordEncoder passwordEncoder;
     private final JWTUtilsHelper jwtUtilsHelper;
+
+    //Envia el codigo para cambiar password
+    @Override
+    public void enviarCodigoVerificacion(EnviarCodigoDTO enviarCodigoDTO) throws Exception {
+        try {
+            Usuario usuario = obtenerPorEmail(enviarCodigoDTO.email());
+
+            String codigoCambiarClave = generarCodigo();
+            usuario.setCodigoValidacion(new CodigoValidacion(
+                    codigoCambiarClave,
+                    LocalDateTime.now()
+            ));
+            usuarioRepositorio.save(usuario);
+
+            String asunto = "Restablecer Password";
+            String cuerpo = EmailUtils.generarTemplateRestablecerClave(
+                    usuario.getNombre(),
+                    usuario.getEmail(),
+                    codigoCambiarClave
+            );
+            String destinatario = usuario.getEmail();
+
+            emailServicio.enviarCorreo(new EmailDTO(asunto, cuerpo, destinatario));
+
+        } catch (NoSuchElementException e) {
+            throw new Exception("El correo no está registrado.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("No se pudo enviar el correo: " + e.getMessage());
+        }
+    }
+
 
     @Override
     public void crear(CrearUsuarioDTO crearUsuarioDTO) throws Exception {
@@ -165,21 +195,6 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         return codigo.toString();
     }
 
-    //Envia el codigo para cambiar password
-    @Override
-    public void enviarCodigoVerificacion(EnviarCodigoDTO enviarCodigoDTO) throws Exception {
-       Usuario usuario = obtenerPorEmail(enviarCodigoDTO.email());
-       String codigo = generarCodigo();
-       usuario.setCodigoValidacion(new CodigoValidacion(
-               codigo,
-               LocalDateTime.now()
-       ));
-       usuarioRepositorio.save(usuario);
-        String asunto = "Restablecer Password";
-        String cuerpo = "¡Hola " + usuario.getNombre() + "! Tu código para cambiar password es: " + codigo;
-        String destinatario = usuario.getEmail();
-        emailServicio.enviarCorreo(new EmailDTO(asunto, cuerpo, destinatario));
-    }
 
     @Override
     public void cambiarPassword(CambiarPasswordDTO cambiarPasswordDTO) throws Exception {
