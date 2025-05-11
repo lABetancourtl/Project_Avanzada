@@ -30,13 +30,12 @@ public class Usuario {
     private String password;
     private CodigoValidacion codigoValidacion; // ← embebida
     private String fechaRegistro;
-    private String fotoPerfil;
 
 
     // También puedes eliminar este constructor si usas @Builder y no necesitas lógica extra
     @Builder
     public Usuario(String nombre, String email, String telefono, String ciudad, Rol rol,
-                   EstadoUsuario estado, String password, CodigoValidacion codigoValidacion, String fechaRegistro, String fotoPerfil) {
+                   EstadoUsuario estado, String password, CodigoValidacion codigoValidacion, String fechaRegistro) {
         this.nombre = nombre;
         this.email = email;
         this.telefono = telefono;
@@ -46,6 +45,5 @@ public class Usuario {
         this.password = password;
         this.codigoValidacion = codigoValidacion;
         this.fechaRegistro = fechaRegistro;
-        this.fotoPerfil = fotoPerfil;
     }
 }

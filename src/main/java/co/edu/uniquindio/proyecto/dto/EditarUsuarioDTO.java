@@ -17,7 +17,6 @@ public record EditarUsuarioDTO (
             String telefono,
 
             @NotBlank(message = "La ciudad es obligatoria")
-            String ciudad,
+            String ciudad
 
-            String fotoPerfil
 ){}
