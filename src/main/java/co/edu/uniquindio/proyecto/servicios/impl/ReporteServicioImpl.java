@@ -12,6 +12,7 @@ import co.edu.uniquindio.proyecto.seguridad.JWTUtilsHelper;
 import co.edu.uniquindio.proyecto.servicios.EmailServicio;
 import co.edu.uniquindio.proyecto.servicios.ReporteServicio;
 import co.edu.uniquindio.proyecto.mapper.ReporteMapper;
+import co.edu.uniquindio.proyecto.servicios.impl.mapbox.MapboxService;
 import co.edu.uniquindio.proyecto.util.EmailTemplateUtil;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.PrimitiveIterator;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +36,7 @@ public class ReporteServicioImpl implements ReporteServicio {
     private final WebSocketNotificationService webSocketNotificationService;
     private final EmailServicio emailServicio;
     private final JWTUtilsHelper jwtUtilsHelper;
+    private final MapboxService mapboxService;
 
 
 
@@ -50,6 +53,15 @@ public class ReporteServicioImpl implements ReporteServicio {
 
         // Asignar manualmente el cliente al reporte
         reporte.setClienteId(usuario.getId());
+
+        // Asignar la ciudad automáticamente con las coordenadas (latitud, longitud)
+        String ciudad = mapboxService.obtenerCiudad(reporte.getUbicacion().getLatitud(), reporte.getUbicacion().getLongitud());
+        if (ciudad != null) {
+            reporte.setCiudad(ciudad);  // Asignamos la ciudad al reporte
+        } else {
+            // En caso de que no se encuentre la ciudad, podrías manejar el error aquí
+            reporte.setCiudad("Ciudad desconocida");
+        }
 
         asignarDatosAdicionales(reporte);
 
@@ -182,12 +194,6 @@ public class ReporteServicioImpl implements ReporteServicio {
     }
 
 
-
-    @Override
-    public void marcarReporteImportante(String id) {
-
-    }
-
     @Override
     public void cambiarEstadoReporte(String idReporte, CambiarEstadoDTO cambiarEstadoDTO) throws Exception {
         // Validar el ID del reporte
@@ -244,6 +250,20 @@ public class ReporteServicioImpl implements ReporteServicio {
                 "reports"
         );
         webSocketNotificationService.notificarClientes(notificacionDTO);
+    }
+
+    @Override
+    public void marcarReporteImportante(String id) {
+
+    }
+
+
+    @Override
+    public List<ReporteDTO> obtenerReportesPorCiudad(String nombreCiudad) {
+        List<Reporte> reportes = reporteRepositorio.findByCiudadIgnoreCase(nombreCiudad);
+        return reportes.stream()
+                .map(reporteMapper::toDTO) // convierte cada documento a DTO
+                .toList();
     }
 
 

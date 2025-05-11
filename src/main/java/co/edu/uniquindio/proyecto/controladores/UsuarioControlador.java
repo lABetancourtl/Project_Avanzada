@@ -17,11 +17,6 @@ public class UsuarioControlador {
 
     private final UsuarioServicio usuarioServicio;
 
-    @GetMapping("/{email}/reportes")
-    public ResponseEntity<MensajeDTO<List<InfoReporteDTO>>> obtenerReportesUsuario(@PathVariable String id) throws Exception {
-        List<InfoReporteDTO> lista = usuarioServicio.obtenerReportesUsuario(id);
-        return ResponseEntity.ok(new MensajeDTO<>(false, lista));
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<MensajeDTO<UsuarioDTO>> obtener(@PathVariable String id) throws Exception {

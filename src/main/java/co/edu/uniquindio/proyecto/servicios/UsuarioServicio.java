@@ -11,7 +11,6 @@ public interface UsuarioServicio {
     void editar(String id, EditarUsuarioDTO editarUsuarioDTO) throws Exception;
     void eliminar(String id) throws Exception;
     UsuarioDTO obtener(String id) throws Exception;
-    List<InfoReporteDTO> obtenerReportesUsuario(String id);
     List<UsuarioDTO> listarTodos(String nombre, String ciudad, int pagina);
     void enviarCodigoVerificacion(EnviarCodigoDTO enviarCoditoDTO) throws Exception;
     void cambiarPassword(CambiarPasswordDTO cambiarPasswordDTO) throws Exception;

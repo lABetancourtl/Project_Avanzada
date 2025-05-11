@@ -56,8 +56,8 @@ public class CategoriaServicioImpl implements CategoriaServicio {
 
     @Override
     public List<CategoriaDTO> listar() {
-        return categoriaRepositorio.findAll()
-                .stream()
+        List<Categoria> categorias = categoriaRepositorio.findAll();
+        return categorias.stream()
                 .map(categoriaMapper::toDTO)
                 .toList();
     }
