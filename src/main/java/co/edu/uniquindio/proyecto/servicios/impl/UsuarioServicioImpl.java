@@ -156,11 +156,6 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                 .toList();
     }
 
-    @Override
-    public List<InfoReporteDTO> obtenerReportesUsuario(String id) {
-
-        return null;
-    }
 
     private boolean existeEmail(String email) {
         return usuarioRepositorio.findByEmail(email).isPresent();

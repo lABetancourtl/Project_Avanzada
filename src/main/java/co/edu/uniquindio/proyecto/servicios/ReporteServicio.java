@@ -18,10 +18,11 @@ public interface ReporteServicio {
 
     List<ReporteDTO> obtenerReportesPorRadio(double latitud, double longitud, double radio);
 
-    void marcarReporteImportante(String id) throws Exception;
     void cambiarEstadoReporte(String id, CambiarEstadoDTO estado) throws Exception;
 
 
-    //void crearReporte(CrearReporteDTO reporte, MultipartFile imagen) throws Exception;
+    void marcarReporteImportante(String id) throws Exception;
+
+    List<ReporteDTO> obtenerReportesPorCiudad(String nombreCiudad);
 }
 

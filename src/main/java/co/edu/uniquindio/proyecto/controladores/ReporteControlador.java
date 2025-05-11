@@ -17,7 +17,7 @@ public class ReporteControlador {
     private final ReporteServicio reporteServicio;
 
     // Crear un nuevo reporte
-    @PostMapping
+    @PostMapping("/crear")
     public ResponseEntity<MensajeDTO<String>> crearReporte(@Valid @RequestBody CrearReporteDTO reporte) throws Exception {
         reporteServicio.crearReporte(reporte);
         return ResponseEntity.ok(new MensajeDTO<>(false, "Reporte creado exitosamente"));
@@ -50,7 +50,6 @@ public class ReporteControlador {
         return ResponseEntity.ok(reportes);
     }
 
-
     @GetMapping("/reportes/radio")
     public ResponseEntity<List<ReporteDTO>> obtenerReportesPorRadio(
             @RequestParam("latitud") double latitud,
@@ -60,6 +59,16 @@ public class ReporteControlador {
         return ResponseEntity.ok(reportes);
     }
 
+    //Cambiar estado de reporte
+    @PutMapping("/api/reportes/{id}/estado")
+    public ResponseEntity<?> cambiarEstadoReporte(@PathVariable String id, @RequestBody CambiarEstadoDTO cambiarEstadoDTO) throws Exception {
+        reporteServicio.cambiarEstadoReporte(id, cambiarEstadoDTO);
+        return ResponseEntity.ok(new MensajeDTO<>(false, "Estado del reporte actualizado correctamente"));
+    }
+
+    /*
+    Endpoints Faltantes o incompletos
+     */
 
     // Marcar un reporte como importante
     @PutMapping("/{id}/importante")
@@ -68,11 +77,11 @@ public class ReporteControlador {
         return ResponseEntity.ok("Reporte marcado como importante");
     }
 
-    //Cambiar estado de reporte
-    @PutMapping("/api/reportes/{id}/estado")
-    public ResponseEntity<?> cambiarEstadoReporte(@PathVariable String id, @RequestBody CambiarEstadoDTO cambiarEstadoDTO) throws Exception {
-        reporteServicio.cambiarEstadoReporte(id, cambiarEstadoDTO);
-        return ResponseEntity.ok(new MensajeDTO<>(false, "Estado del reporte actualizado correctamente"));
+
+    @GetMapping("/reportes/ciudad")
+    public ResponseEntity<List<ReporteDTO>> obtenerReportePorCiudad(@RequestParam("nombreCiudad") String nombreCiudad) {
+        List<ReporteDTO> reportes = reporteServicio.obtenerReportesPorCiudad(nombreCiudad);
+        return ResponseEntity.ok(reportes);
     }
 
 }

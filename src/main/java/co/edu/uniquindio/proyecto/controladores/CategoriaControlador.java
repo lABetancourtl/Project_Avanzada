@@ -2,8 +2,7 @@ package co.edu.uniquindio.proyecto.controladores;
 
 import co.edu.uniquindio.proyecto.dto.CategoriaDTO;
 import co.edu.uniquindio.proyecto.dto.CrearCategoriaDTO;
-import co.edu.uniquindio.proyecto.dto.InfocategoriaDTO;
-import org.springframework.security.access.prepost.PreAuthorize;
+import co.edu.uniquindio.proyecto.modelo.documents.Categoria;
 import co.edu.uniquindio.proyecto.dto.MensajeDTO;
 import co.edu.uniquindio.proyecto.servicios.CategoriaServicio;
 import jakarta.validation.Valid;
@@ -48,7 +47,7 @@ public class CategoriaControlador {
     }
 
     // Listar todas las categorías
-    @GetMapping
+    @GetMapping("/listar")
     public ResponseEntity<List<CategoriaDTO>> listar() {
         List<CategoriaDTO> categorias = categoriaServicio.listar();
         return ResponseEntity.ok(categorias);

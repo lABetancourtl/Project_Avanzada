@@ -24,6 +24,7 @@ public class Reporte {
     private ObjectId id;
     
     private String titulo;
+    private String ciudad;
     private ObjectId categoriaId;
     private String descripcion;
     private Ubicacion ubicacion;
@@ -50,7 +51,7 @@ public class Reporte {
 //        this.contadorImportante = contadorImportante;
 //    }
     @Builder
-    public Reporte(String titulo, ObjectId categoriaId, String descripcion, Ubicacion ubicacion, String foto, ObjectId clienteId, LocalDateTime fecha, List<HistorialReporte> historial, EstadoReporte estadoActual, int contadorImportante) {
+    public Reporte(String titulo, String ciudad, ObjectId categoriaId, String descripcion, Ubicacion ubicacion, String foto, ObjectId clienteId, LocalDateTime fecha, List<HistorialReporte> historial, EstadoReporte estadoActual, int contadorImportante) {
         this.titulo = titulo;
         this.categoriaId = categoriaId;
         this.descripcion = descripcion;
@@ -61,5 +62,6 @@ public class Reporte {
         this.historial = historial;
         this.estadoActual = estadoActual;
         this.contadorImportante = contadorImportante;
+        this.ciudad = ciudad;
     }
 }

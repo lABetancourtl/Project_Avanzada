@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.modelo.documents;
 
+
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
