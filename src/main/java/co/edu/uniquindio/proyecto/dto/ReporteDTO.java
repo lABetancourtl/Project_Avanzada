@@ -11,7 +11,7 @@ public record ReporteDTO (
         String id,
         String titulo,
         String descripcion,
-        String estado,
+        String estadoActual,
         LocalDateTime fecha,
         boolean importante,
         String clienteId,
