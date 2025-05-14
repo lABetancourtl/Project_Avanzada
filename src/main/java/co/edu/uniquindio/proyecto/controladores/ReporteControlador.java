@@ -38,7 +38,7 @@ public class ReporteControlador {
     }
 
 
-    @GetMapping("/mis-reportes/")
+    @GetMapping("/mis")
     public ResponseEntity<List<ReporteDTO>> obtenerMisReportes() throws Exception {
         List<ReporteDTO> misReportes = reporteServicio.obtenerMisReportes();
         return ResponseEntity.ok(misReportes);
