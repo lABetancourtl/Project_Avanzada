@@ -260,10 +260,8 @@ public class ReporteServicioImpl implements ReporteServicio {
 
     @Override
     public List<ReporteDTO> obtenerReportesPorCiudad(String nombreCiudad) {
-        List<Reporte> reportes = reporteRepositorio.findByCiudadIgnoreCase(nombreCiudad);
-        return reportes.stream()
-                .map(reporteMapper::toDTO) // convierte cada documento a DTO
-                .toList();
+        List<ReporteDTO> reportes = reporteRepositorio.obtenerReportes(nombreCiudad);
+        return reportes;
     }
 
 
