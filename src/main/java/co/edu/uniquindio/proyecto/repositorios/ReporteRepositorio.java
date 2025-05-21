@@ -24,6 +24,7 @@ public interface ReporteRepositorio extends MongoRepository<Reporte, ObjectId> {
     List<Reporte> findByCategoriaId(String categoriaId);
     List<Reporte> findAllByClienteId(ObjectId clienteId);
     List<Reporte> findByCiudadIgnoreCase(String ciudad);
+    ReporteDTO findByid(ObjectId id);
 
     // filter, lookup categorias, lookup usuarios, project
     @Aggregation(
@@ -37,5 +38,4 @@ public interface ReporteRepositorio extends MongoRepository<Reporte, ObjectId> {
             }
     )
     List<ReporteDTO> obtenerReportes(String nombreCiudad);
-
 }

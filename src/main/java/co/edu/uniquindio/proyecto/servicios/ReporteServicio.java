@@ -24,5 +24,7 @@ public interface ReporteServicio {
     void marcarReporteImportante(String id) throws Exception;
 
     List<ReporteDTO> obtenerReportesPorCiudad(String nombreCiudad);
+
+    ReporteDTO obtenerReportePorId(String id);
 }
 

@@ -15,9 +15,10 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public String getWeather(double lat, double lon) {
-        String url = String.format("%s?lat=%f&lon=%f&appid=%s&units=metric",
+        String url = String.format("%s?lat=%f&lon=%f&appid=%s&units=metric&lang=es",
                 weatherConfig.getUrl(), lat, lon, weatherConfig.getKey());
 
         return restTemplate.getForObject(url, String.class);
     }
+
 }

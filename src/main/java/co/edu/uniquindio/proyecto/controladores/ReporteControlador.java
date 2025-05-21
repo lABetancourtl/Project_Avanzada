@@ -44,6 +44,15 @@ public class ReporteControlador {
         return ResponseEntity.ok(misReportes);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ReporteDTO> obtenerReportePorId(@PathVariable("id") String id) {
+        ReporteDTO reporte = reporteServicio.obtenerReportePorId(id);
+        if (reporte == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(reporte);
+    }
+
     @GetMapping("/reportes/categoria/{categoria}")
     public ResponseEntity<List<ReporteDTO>> obtenerReportePorCategoria(@PathVariable String categoria) {
         List<ReporteDTO> reportes = reporteServicio.obtenerReportePorCategoria(categoria);
@@ -83,5 +92,9 @@ public class ReporteControlador {
         List<ReporteDTO> reportes = reporteServicio.obtenerReportesPorCiudad(nombreCiudad);
         return ResponseEntity.ok(reportes);
     }
+
+
+
+
 
 }

@@ -155,6 +155,22 @@ public class ReporteServicioImpl implements ReporteServicio {
                 .toList();
     }
 
+    @Override
+    public ReporteDTO obtenerReportePorId(String id) {
+        ObjectId objectId = new ObjectId(id);
+        return reporteRepositorio.findByid(objectId);
+    }
+
+    @Override
+    public List<ReporteDTO> obtenerReportesPorCiudad(String nombreCiudad) {
+        List<ReporteDTO> reportes = reporteRepositorio.obtenerReportes(nombreCiudad);
+        return reportes;
+    }
+
+
+
+
+
 
     @Override
     public List<ReporteDTO> obtenerReportePorCategoria(String categoriaId) {
@@ -258,11 +274,7 @@ public class ReporteServicioImpl implements ReporteServicio {
     }
 
 
-    @Override
-    public List<ReporteDTO> obtenerReportesPorCiudad(String nombreCiudad) {
-        List<ReporteDTO> reportes = reporteRepositorio.obtenerReportes(nombreCiudad);
-        return reportes;
-    }
+
 
 
 

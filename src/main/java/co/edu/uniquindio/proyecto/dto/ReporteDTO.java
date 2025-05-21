@@ -14,5 +14,5 @@ public record ReporteDTO (
         UbicacionDTO ubicacion,
         String categoriaId,
         String nombreCategoria,
-        List<String> fotos
+        String foto
 ){}

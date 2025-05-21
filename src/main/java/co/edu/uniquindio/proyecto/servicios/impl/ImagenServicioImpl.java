@@ -6,6 +6,7 @@ import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.Map;
 public class ImagenServicioImpl implements ImagenServicio {
 
     private final Cloudinary cloudinary;
+
     public ImagenServicioImpl(
             @Value("${cloudinary.cloud_name}") String cloudName,
             @Value("${cloudinary.api_key}") String apiKey,
@@ -29,25 +31,18 @@ public class ImagenServicioImpl implements ImagenServicio {
         cloudinary = new Cloudinary(config);
     }
 
-//    @Override
-//    public Map subirImagen(MultipartFile imagen) throws Exception {
-//        File file = null;
-//        try {
-//            file = convertir(imagen);
-//            return cloudinary.uploader().upload(file, ObjectUtils.asMap("folder", "reportes"));
-//        } finally {
-//            if (file != null && file.exists()) {
-//                file.delete(); // Eliminar archivo temporal después de usarlo
-//            }
-//        }
-//    }
-
     @Override
     public Map subirImagen(MultipartFile imagen) throws Exception {
-        File file = convertir(imagen);
-        return cloudinary.uploader().upload(file, ObjectUtils.asMap("folder", "reportes"));
+        File file = null;
+        try {
+            file = convertir(imagen);
+            return cloudinary.uploader().upload(file, ObjectUtils.asMap("folder", "reportes"));
+        } finally {
+            if (file != null && file.exists()) {
+                file.delete(); // Eliminar archivo temporal después de usarlo
+            }
+        }
     }
-
 
     @Override
     public Map eliminarImagen(String idImagen) throws Exception {
@@ -55,11 +50,14 @@ public class ImagenServicioImpl implements ImagenServicio {
     }
 
     private File convertir(MultipartFile imagen) throws IOException {
-        File file = File.createTempFile(imagen.getOriginalFilename(), null);
+        String originalName = imagen.getOriginalFilename();
+        String prefix = (originalName != null && originalName.length() > 3) ? originalName.substring(0, 3) : "img";
+        String suffix = (originalName != null && originalName.contains(".")) ? originalName.substring(originalName.lastIndexOf(".")) : null;
+
+        File file = File.createTempFile(prefix, suffix);
         FileOutputStream fos = new FileOutputStream(file);
         fos.write(imagen.getBytes());
         fos.close();
         return file;
     }
-
 }

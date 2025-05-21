@@ -12,7 +12,6 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface ReporteMapper {
 
-
     @Mapping(target = "categoriaId", source = "categoriaId")
     @Mapping(target = "ubicacion", source = "ubicacion")
     Reporte toDocument(CrearReporteDTO dto);
@@ -27,20 +26,23 @@ public interface ReporteMapper {
     @Mapping(target = "historial", ignore = true)
     void EditarReporteDTO(EditarReporteDTO dto, @MappingTarget Reporte reporte);
 
-    // Conversión personalizada de String a ObjectId
     default ObjectId map(String value) {
         return new ObjectId(value);
     }
-    // Conversión personalizada de ObjectId a String (para toDTO)
+
     default String map(ObjectId value) {
         return value != null ? value.toHexString() : null;
     }
 
-    // Conversión personalizada para ubicación
     default Ubicacion mapUbicacionDTO(UbicacionDTO dto) {
         return new Ubicacion(dto.latitud(), dto.longitud());
     }
-    // Conversión de documento a DTO
+
+    @Mapping(target = "categoriaId", source = "categoriaId")
+    @Mapping(target = "ubicacion", source = "ubicacion")
+    // Mapea el campo foto tal cual está
+    @Mapping(target = "foto", source = "foto")
     ReporteDTO toDTO(Reporte reporte);
 }
+
 
