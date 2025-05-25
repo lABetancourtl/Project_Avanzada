@@ -44,8 +44,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0")
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.mapstruct:mapstruct:1.6.3") // ✅ NUEVO
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3") // ✅ NUEVO
+    implementation("org.mapstruct:mapstruct:1.6.3")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
@@ -58,7 +58,6 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
     implementation("org.json:json:20240303")
-    implementation("org.mongodb:mongodb-driver-sync:5.3.0")
 }
 
 
